@@ -1,0 +1,120 @@
+﻿@page
+@model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ClubsTienPvk</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ClubsTienPvk.ClubIdtienPvk" />
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.ClubCode" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.ClubCode" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.ClubCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.ClubName" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.ClubName" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.ClubName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.CategoryIdtienPvk" class="control-label"></label>
+                <select asp-for="ClubsTienPvk.CategoryIdtienPvk" class="form-control" asp-items="ViewBag.CategoryIdtienPvk"></select>
+                <span asp-validation-for="ClubsTienPvk.CategoryIdtienPvk" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.Description" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.Description" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.FoundedDate" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.FoundedDate" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.FoundedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.Email" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.Email" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.Phone" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.Phone" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.Address" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.Address" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.ManagerUserId" class="control-label"></label>
+                <select asp-for="ClubsTienPvk.ManagerUserId" class="form-control" asp-items="ViewBag.ManagerUserId"></select>
+                <span asp-validation-for="ClubsTienPvk.ManagerUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.MemberLimit" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.MemberLimit" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.MemberLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ClubsTienPvk.IsOpenToJoin" /> @Html.DisplayNameFor(model => model.ClubsTienPvk.IsOpenToJoin)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ClubsTienPvk.RequiresApproval" /> @Html.DisplayNameFor(model => model.ClubsTienPvk.RequiresApproval)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.Status" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.Status" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.CreatedAt" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.CreatedAt" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.CreatedBy" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.CreatedBy" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.ModifiedBy" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.ModifiedBy" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.ModifiedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClubsTienPvk.ModifiedAt" class="control-label"></label>
+                <input asp-for="ClubsTienPvk.ModifiedAt" class="form-control" />
+                <span asp-validation-for="ClubsTienPvk.ModifiedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ClubsTienPvk.IsDeleted" /> @Html.DisplayNameFor(model => model.ClubsTienPvk.IsDeleted)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

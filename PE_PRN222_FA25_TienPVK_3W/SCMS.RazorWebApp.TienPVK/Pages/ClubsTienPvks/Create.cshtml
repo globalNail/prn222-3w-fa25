@@ -1,0 +1,216 @@
+﻿
+@page
+@model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.CreateModel
+
+@{
+    ViewData["Title"] = "Create Club";
+}
+
+<div class="create-club-page">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Clubs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create new club</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Club</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <h5 class="border-bottom pb-2 mb-3">Basic Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.ClubCode" class="form-label"></label>
+                                <input asp-for="ClubsTienPvk.ClubCode" class="form-control"
+                                    placeholder="e.g., CLUB001" />
+                                <span asp-validation-for="ClubsTienPvk.ClubCode" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.ClubName" class="form-label"></label>
+                                <input asp-for="ClubsTienPvk.ClubName" class="form-control"
+                                    placeholder="e.g., Photography Club" />
+                                <span asp-validation-for="ClubsTienPvk.ClubName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.CategoryIdtienPvk" class="form-label">Category</label>
+                                <select asp-for="ClubsTienPvk.CategoryIdtienPvk" class="form-select"
+                                    asp-items="ViewBag.CategoryIdtienPvk">
+                                    <option value="">-- Select Category --</option>
+                                </select>
+                                <span asp-validation-for="ClubsTienPvk.CategoryIdtienPvk" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.FoundedDate" class="form-label"></label>
+                                <input asp-for="ClubsTienPvk.FoundedDate" type="date" class="form-control" />
+                                <span asp-validation-for="ClubsTienPvk.FoundedDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ClubsTienPvk.Description" class="form-label"></label>
+                            <textarea asp-for="ClubsTienPvk.Description" class="form-control" rows="4"
+                                placeholder="Describe the club's mission, activities, and goals..."></textarea>
+                            <span asp-validation-for="ClubsTienPvk.Description" class="text-danger"></span>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">Contact Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.Email" class="form-label"></label>
+                                <input asp-for="ClubsTienPvk.Email" type="email" class="form-control"
+                                    placeholder="club@example.com" />
+                                <span asp-validation-for="ClubsTienPvk.Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.Phone" class="form-label"></label>
+                                <input asp-for="ClubsTienPvk.Phone" type="tel" class="form-control"
+                                    placeholder="+1 234 567 8900" />
+                                <span asp-validation-for="ClubsTienPvk.Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ClubsTienPvk.Address" class="form-label"></label>
+                            <input asp-for="ClubsTienPvk.Address" class="form-control"
+                                placeholder="Building, Room Number" />
+                            <span asp-validation-for="ClubsTienPvk.Address" class="text-danger"></span>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">Club Settings</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.MemberLimit" class="form-label"></label>
+                                <input asp-for="ClubsTienPvk.MemberLimit" type="number" class="form-control" min="1"
+                                    placeholder="e.g., 50" />
+                                <span asp-validation-for="ClubsTienPvk.MemberLimit" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClubsTienPvk.Status" class="form-label"></label>
+                                <select asp-for="ClubsTienPvk.Status" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                    <option value="Suspended">Suspended</option>
+                                </select>
+                                <span asp-validation-for="ClubsTienPvk.Status" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" asp-for="ClubsTienPvk.IsOpenToJoin"
+                                        id="isOpenToJoin">
+                                    <label class="form-check-label" for="isOpenToJoin">
+                                        @Html.DisplayNameFor(model => model.ClubsTienPvk.IsOpenToJoin)
+                                    </label>
+                                </div>
+                                <small class="text-muted">Allow new members to join this club</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox"
+                                        asp-for="ClubsTienPvk.RequiresApproval" id="requiresApproval">
+                                    <label class="form-check-label" for="requiresApproval">
+                                        @Html.DisplayNameFor(model => model.ClubsTienPvk.RequiresApproval)
+                                    </label>
+                                </div>
+                                <small class="text-muted">Require admin approval for new members</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Create Club
+                            </button>
+                            <a asp-page="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-lightbulb"></i> Tips</h5>
+                    <ul class="small mb-0">
+                        <li>Choose a unique and memorable club code</li>
+                        <li>Write a clear description to attract members</li>
+                        <li>Set appropriate member limits based on capacity</li>
+                        <li>Enable "Open to Join" to allow immediate enrollment</li>
+                        <li>Use approval requirement for selective membership</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .create-club-page {
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+    }
+
+    .breadcrumb-item a {
+        text-decoration: none;
+        color: #0d6efd;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .card {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 0.75rem;
+    }
+
+    .card-header {
+        border-radius: 0.75rem 0.75rem 0 0 !important;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
