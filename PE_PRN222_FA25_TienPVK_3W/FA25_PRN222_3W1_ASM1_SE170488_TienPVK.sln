@@ -11,13 +11,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCMS.Service.TienPVK", "SCM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCMS.RazorWebApp.TienPVK", "SCMS.RazorWebApp.TienPVK\SCMS.RazorWebApp.TienPVK.csproj", "{AB960D2A-EAA1-4291-BEE3-3290EF261E8F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\B3W_PRN222_01_PRN222_SEXXXXXX_SCMS.sql = ..\B3W_PRN222_01_PRN222_SEXXXXXX_SCMS.sql
+		global.json = global.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{15380156-74FA-4C52-B9E2-284C122E3E92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,5 +40,11 @@ Global
 		{AB960D2A-EAA1-4291-BEE3-3290EF261E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB960D2A-EAA1-4291-BEE3-3290EF261E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB960D2A-EAA1-4291-BEE3-3290EF261E8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C49E3124-A56B-4C6C-B96C-AA609E457AF9}
 	EndGlobalSection
 EndGlobal

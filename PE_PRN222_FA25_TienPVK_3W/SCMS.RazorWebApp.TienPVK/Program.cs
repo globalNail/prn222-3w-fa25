@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using SCMS.Repository.TienPVK.Implements;
 using SCMS.Service.TienPVK.Implements;
 
@@ -9,8 +10,16 @@ builder.Services.AddRazorPages();
 // Register concrete classes directly (no interfaces)
 builder.Services.AddScoped<ClubsTienPvkRepository>();
 builder.Services.AddScoped<ClubCategoriesTienPvkRepository>();
+builder.Services.AddScoped<SystemAccountService>();
 builder.Services.AddScoped<ClubsTienPvkService>();
 builder.Services.AddScoped<ClubCategoriesTienPvkService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.AccessDeniedPath = "/Account/Forbidden";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    });
 
 
 var app = builder.Build();
@@ -28,6 +37,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.MapRazorPages().RequireAuthorization();
 app.UseAuthorization();
 
 app.MapRazorPages();

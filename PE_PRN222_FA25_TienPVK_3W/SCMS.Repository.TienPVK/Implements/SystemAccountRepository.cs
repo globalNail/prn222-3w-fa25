@@ -6,7 +6,9 @@ namespace SCMS.Repository.TienPVK.Implements;
 
 public class SystemAccountRepository : GenericRepository<SystemAccount>
 {
-    private readonly FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext _context;
+    public SystemAccountRepository()
+    {
+    }
 
     public SystemAccountRepository(FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context) => _context = context;
 
