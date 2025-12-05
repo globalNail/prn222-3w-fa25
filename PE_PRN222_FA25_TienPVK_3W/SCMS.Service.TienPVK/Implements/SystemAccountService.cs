@@ -4,15 +4,12 @@ using SCMS.Service.TienPVK.Interfaces;
 
 namespace SCMS.Service.TienPVK.Implements;
 
-public class SystemAccountService : ISystemAccountService
+public class SystemAccountService
 {
     private readonly SystemAccountRepository _repository;
 
     public SystemAccountService() {
-        if (_repository == null)
-        {
-            _repository = new SystemAccountRepository();
-        }
+        _repository ??= new SystemAccountRepository();
     }
 
     public SystemAccountService(SystemAccountRepository repository) => _repository = repository;

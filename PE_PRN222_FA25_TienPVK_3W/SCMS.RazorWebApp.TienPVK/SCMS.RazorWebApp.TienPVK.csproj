@@ -25,4 +25,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="libman restore" ContinueOnError="true" />
+  </Target>
+
 </Project>
