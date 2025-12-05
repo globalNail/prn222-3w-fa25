@@ -47,7 +47,7 @@
             @foreach (var item in Model.ClubsTienPvk)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm club-card">
+                    <div class="card h-100 shadow-sm club-card" id="@item.ClubIdtienPvk">
                         <div class="card-body d-flex flex-column gap-3">
                             <div class="d-flex justify-content-between align-items-start gap-3">
                                 <div>
@@ -118,6 +118,60 @@
         </div>
     }
 </section>
+
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/clubHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().then(function ()
+        {
+            console.log("SignalR connected successfully on Index page");
+        }).catch(function (err)
+        {
+            console.error("SignalR connection error:", err.toString());
+        });
+
+        connection.on("DeleteClub", function (clubId)
+        {
+            console.log("Received DeleteClub event for ID:", clubId);
+            // Find the card div with the matching ID and remove its parent column
+            var card = document.getElementById(clubId);
+
+            if (card)
+            {
+                var colDiv = card.closest('.col');
+                if (colDiv)
+                {
+                    colDiv.style.transition = 'opacity 0.4s ease';
+                    colDiv.style.opacity = '0';
+                    setTimeout(function ()
+                    {
+                        colDiv.remove();
+                        console.log("Card removed from DOM");
+
+                        // Update stats
+                        updateStats();
+                    }, 400);
+                }
+            } else
+            {
+                console.warn("Card not found with ID:", clubId);
+            }
+        });
+
+        function updateStats()
+        {
+            // Reload page to update stats (or you can update them manually)
+            location.reload();
+        }
+    </script>
+}
 
 @functions {
     private static string GetStatusClass(string? status)

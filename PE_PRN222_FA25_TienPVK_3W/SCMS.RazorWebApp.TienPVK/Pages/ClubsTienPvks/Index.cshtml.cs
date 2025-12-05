@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using SCMS.Domain.TienPVK.Models;
-using SCMS.Service.TienPVK.Implements;
 
 namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {

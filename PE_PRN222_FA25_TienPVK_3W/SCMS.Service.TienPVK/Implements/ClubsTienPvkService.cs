@@ -10,6 +10,8 @@ public class ClubsTienPvkService : IClubsTienPvkService
 
     public ClubsTienPvkService(ClubsTienPvkRepository repository) => _repository = repository;
 
+    public async Task<bool> AnyAsync(int categoryId) => await _repository.AnyAsync(categoryId);
+
     public async Task<int> CreateAsync(ClubsTienPvk club) => await _repository.CreateAsync(club);
 
     public async Task<List<ClubsTienPvk>> GetAllAsync() => await _repository.GetAllAsync();
@@ -22,11 +24,19 @@ public class ClubsTienPvkService : IClubsTienPvkService
     {
         try
         {
-
             var entity = await _repository.GetByIdAsync(id);
-            return entity == null 
-                ? throw new Exception($"Club with id {id} not found.") 
-                : await _repository.RemoveAsync(entity);
+            if (entity == null)
+            {
+                throw new Exception($"Club with id {id} not found.");
+            }
+
+            // Soft delete: just mark as deleted instead of removing from database
+            entity.IsDeleted = true;
+            entity.ModifiedAt = DateTime.Now;
+            entity.ModifiedBy = "System"; // Or get from current user context
+
+            await _repository.UpdateAsync(entity);
+            return true;
         }
         catch (Exception ex)
         {

@@ -121,10 +121,47 @@
             @Html.DisplayFor(model => model.ClubsTienPvk.ManagerUser.Email)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="ClubsTienPvk.ClubIdtienPvk" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="button" id="btnHubDelete" value="Delete by SignalR" class="btn btn-danger" /> |
         <a asp-page="./Index">Back to List</a>
     </form>
 </div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/clubHub").build();
+
+    connection.on("DeleteClub", function (clubId)
+    {
+        console.log("Club deleted successfully, redirecting...");
+        // Redirect to Index page after receiving confirmation
+        window.location.href = "/ClubsTienPvks/Index";
+    });
+
+    connection.start().then(function ()
+    {
+        document.getElementById("btnHubDelete").disabled = false;
+    }).catch(function (err)
+    {
+        return console.error("error on start:" + err.toString());
+    });
+
+    document.getElementById("btnHubDelete").addEventListener("click", function (event)
+    {
+        var obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
+        connection.invoke("DeleteClub", obj).then(function ()
+        {
+            console.log("Delete successful, redirecting...");
+        }).catch(function (err)
+        {
+            console.error("Action fail:", err.toString());
+        });
+        event.preventDefault();
+    });
+
+</script>

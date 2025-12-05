@@ -25,4 +25,14 @@ public class ClubsTienPvkRepository : GenericRepository<ClubsTienPvk>
         .Include(c => c.ManagerUser)
         .AsNoTracking()
         .FirstOrDefaultAsync(c => c.ClubIdtienPvk == id && !c.IsDeleted);
+
+    public async Task<bool> AnyAsync(int id)
+    {
+        var entity = await _context.ClubsTienPvks.AnyAsync(c => c.ClubIdtienPvk == id);
+        if (entity)
+        {
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SCMS.RazorWebApp.TienPVK.Hubs;
 using SCMS.Repository.TienPVK.Implements;
-using SCMS.Service.TienPVK.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 // Register concrete classes directly (no interfaces)
 builder.Services.AddScoped<ClubsTienPvkRepository>();
@@ -36,10 +37,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.MapRazorPages().RequireAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapRazorPages().RequireAuthorization();
+
+app.MapHub<ClubHub>("/clubHub");
 
 app.Run();

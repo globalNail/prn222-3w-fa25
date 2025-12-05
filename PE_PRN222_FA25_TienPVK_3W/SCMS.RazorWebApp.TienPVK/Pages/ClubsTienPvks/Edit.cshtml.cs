@@ -8,11 +8,14 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {
     public class EditModel : PageModel
     {
-        private readonly SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext _context;
+        private readonly ClubsTienPvkService _service;
+        private readonly ClubCategoriesTienPvkService _categoryService;
 
-        public EditModel(SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context)
-        {
-            _context = context;
+        public EditModel(ClubsTienPvkService service,
+            ClubCategoriesTienPvkService categoryService
+        ){
+            _service = service;
+            _categoryService = categoryService;
         }
 
         [BindProperty]
@@ -25,14 +28,15 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
                 return NotFound();
             }
 
-            var clubstienpvk =  await _context.ClubsTienPvks.FirstOrDefaultAsync(m => m.ClubIdtienPvk == id);
+            var clubstienpvk =  await _service.GetByIdAsync(id.Value);
             if (clubstienpvk == null)
             {
                 return NotFound();
             }
             ClubsTienPvk = clubstienpvk;
-           ViewData["CategoryIdtienPvk"] = new SelectList(_context.ClubCategoriesTienPvks, "CategoryIdtienPvk", "CategoryCode");
-           ViewData["ManagerUserId"] = new SelectList(_context.SystemAccounts, "UserAccountId", "Email");
+            var categoryList = await _categoryService.GetAllAsync();
+            ViewData["CategoryIdtienPvk"] = new SelectList(categoryList, "CategoryIdtienPvk", "CategoryCode");
+           //ViewData["ManagerUserId"] = new SelectList(_service.SystemAccounts, "UserAccountId", "Email");
             return Page();
         }
 
@@ -40,16 +44,31 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            ClubsTienPvk.ModifiedAt = DateTime.Now;
+            ModelState.Remove("ClubsTienPvk.CategoryIdtienPvkNavigation");
+            ModelState.Remove("ClubsTienPvk.ManagerUser");
+            ModelState.Remove("ClubsTienPvk.Activities");
+            ModelState.Remove("ClubsTienPvk.AttendanceSessions");
+            ModelState.Remove("ClubsTienPvk.ClubFeePolicies");
+            ModelState.Remove("ClubsTienPvk.DisciplinaryCases");
+            ModelState.Remove("ClubsTienPvk.FeeInvoices");
+            ModelState.Remove("ClubsTienPvk.JoinRequests");
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(ClubsTienPvk).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _service.UpdateAsync(ClubsTienPvk);
+
+                if (result > 0)
+                {
+                    return RedirectToPage("./Index");
+
+                }
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -63,12 +82,12 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
                 }
             }
 
-            return RedirectToPage("./Index");
+            return Page();
         }
 
         private bool ClubsTienPvkExists(int id)
         {
-            return _context.ClubsTienPvks.Any(e => e.ClubIdtienPvk == id);
+            return _service.AnyAsync(id).Result;
         }
     }
 }

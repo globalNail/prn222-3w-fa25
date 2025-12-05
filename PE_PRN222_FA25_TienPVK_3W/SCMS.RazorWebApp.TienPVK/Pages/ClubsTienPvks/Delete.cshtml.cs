@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SCMS.Domain.TienPVK.Models;
 using SCMS.Repository.TienPVK.DBContext;
+using SCMS.Service.TienPVK.Implements;
 
 namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {
     public class DeleteModel : PageModel
     {
-        private readonly SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext _context;
+        private readonly ClubsTienPvkService _service;
 
-        public DeleteModel(SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context)
+        public DeleteModel(ClubsTienPvkService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [BindProperty]
@@ -29,7 +30,7 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
                 return NotFound();
             }
 
-            var clubstienpvk = await _context.ClubsTienPvks.FirstOrDefaultAsync(m => m.ClubIdtienPvk == id);
+            var clubstienpvk = await _service.GetByIdAsync(id.Value);
 
             if (clubstienpvk == null)
             {
@@ -49,15 +50,14 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
                 return NotFound();
             }
 
-            var clubstienpvk = await _context.ClubsTienPvks.FindAsync(id);
-            if (clubstienpvk != null)
+            var clubstienpvk = await _service.DeleteAsync(id.Value);
+
+            if (clubstienpvk)
             {
-                ClubsTienPvk = clubstienpvk;
-                _context.ClubsTienPvks.Remove(ClubsTienPvk);
-                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
+            return Page();
         }
     }
 }
