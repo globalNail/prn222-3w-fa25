@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.gitignore = ..\.gitignore
 		..\B3W_PRN222_01_PRN222_SEXXXXXX_SCMS.sql = ..\B3W_PRN222_01_PRN222_SEXXXXXX_SCMS.sql
 		global.json = global.json
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

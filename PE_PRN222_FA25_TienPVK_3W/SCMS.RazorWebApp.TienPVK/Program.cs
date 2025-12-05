@@ -4,8 +4,8 @@ using SCMS.Repository.TienPVK.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(); 
+
 builder.Services.AddSignalR();
 
 // Register concrete classes directly (no interfaces)
@@ -40,25 +40,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// RequireAuthorization(); ~~> Global Authorization Filter, add [AllowAnonymous] attribute for public pages
 app.MapRazorPages().RequireAuthorization();
 
-// Allow anonymous access to login/logout pages
-app.MapRazorPages().AllowAnonymous();
-
 app.MapHub<ClubHub>("/clubHub");
-
-// Redirect root to login if not authenticated
-app.MapGet("/", context =>
-{
-    if (!context.User.Identity?.IsAuthenticated ?? true)
-    {
-        context.Response.Redirect("/Account/Login");
-    }
-    else
-    {
-        context.Response.Redirect("/ClubsTienPvks/Index");
-    }
-    return Task.CompletedTask;
-});
 
 app.Run();

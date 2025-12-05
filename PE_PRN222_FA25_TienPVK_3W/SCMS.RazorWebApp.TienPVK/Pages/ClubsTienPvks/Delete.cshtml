@@ -134,7 +134,10 @@
 <script>
     "use strict";
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/clubHub").build();
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/clubHub")
+        .configureLogging(signalR.LogLevel.None) // Off logging; change to Information for debugging
+        .build();
 
     connection.on("DeleteClub", function (clubId)
     {

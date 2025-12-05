@@ -126,7 +126,7 @@
 
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/clubHub")
-            .configureLogging(signalR.LogLevel.Information)
+            .configureLogging(signalR.LogLevel.None) // Off logging; change to Information for debugging
             .build();
 
         connection.start().then(function ()
