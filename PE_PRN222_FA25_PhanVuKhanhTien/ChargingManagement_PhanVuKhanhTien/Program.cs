@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SCMS.RazorWebApp.TienPVK.Hubs;
-using SCMS.Repository.TienPVK.Implements;
+using Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddRazorPages();
 
 //  ===========
@@ -11,12 +11,12 @@ builder.Services.AddRazorPages();
 //  ===========
 builder.Services.AddSignalR();
 
-// Register concrete classes directly (no interfaces)
-builder.Services.AddScoped<ClubsTienPvkRepository>();
-builder.Services.AddScoped<ClubCategoriesTienPvkRepository>();
-builder.Services.AddScoped<SystemAccountService>();
-builder.Services.AddScoped<ClubsTienPvkService>();
-builder.Services.AddScoped<ClubCategoriesTienPvkService>();
+//  =============================
+//||  Application Service Inject ||
+//  =============================
+builder.Services.AddScoped<ChargingSessionService>();
+builder.Services.AddScoped<ChargingStationService>();
+builder.Services.AddScoped<SystemUserService>();
 
 //  ==================================
 //||  Authentication & Authorization  ||
@@ -28,7 +28,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/Forbidden";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     });
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,7 +42,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
+
 app.UseAuthorization();
 
 // RequireAuthorization(); ~~> Global Authorization Filter, add [AllowAnonymous] attribute for public pages
@@ -52,6 +51,6 @@ app.UseAuthorization();
 //  ==========================
 app.MapRazorPages().RequireAuthorization();
 
-app.MapHub<ClubHub>("/clubHub");
+app.MapRazorPages();
 
 app.Run();

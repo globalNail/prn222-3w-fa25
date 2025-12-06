@@ -131,7 +131,6 @@ artifacts/
 
 # ASP.NET Core
 **/wwwroot/dist/
-**/wwwroot/lib/
 **/node_modules/
 
 # Node.js (for Blazor/JS interop)

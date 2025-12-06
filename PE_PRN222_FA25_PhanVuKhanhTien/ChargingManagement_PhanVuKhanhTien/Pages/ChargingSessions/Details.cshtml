@@ -1,0 +1,55 @@
+﻿@page
+@model ChargingManagement_PhanVuKhanhTien.Pages.ChargingSessions.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ChargingSession</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChargingSession.StartTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChargingSession.StartTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChargingSession.EndTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChargingSession.EndTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChargingSession.KwhConsumed)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChargingSession.KwhConsumed)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChargingSession.Cost)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChargingSession.Cost)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChargingSession.Driver)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChargingSession.Driver.UserPassword)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChargingSession.Station)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChargingSession.Station.StationName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.ChargingSession.SessionId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
