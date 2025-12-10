@@ -154,16 +154,27 @@
         return console.error("error on start:" + err.toString());
     });
 
+    // document.getElementById("btnHubDelete").addEventListener("click", function (event)
+    // {
+    //     var obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
+    //     connection.invoke("DeleteClub", obj).then(function ()
+    //     {
+    //         console.log("Delete successful, redirecting...");
+    //     }).catch(function (err)
+    //     {
+    //         console.error("Action fail:", err.toString());
+    //     });
+    //     event.preventDefault();
+    // });
+
     document.getElementById("btnHubDelete").addEventListener("click", function (event)
     {
-        var obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
-        connection.invoke("DeleteClub", obj).then(function ()
-        {
-            console.log("Delete successful, redirecting...");
-        }).catch(function (err)
-        {
-            console.error("Action fail:", err.toString());
-        });
+        const obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
+
+        connection.invoke("DeleteClub", obj)
+            .then(() => console.log("Delete successful"))
+            .catch(err => console.error("Action fail:", err));
+
         event.preventDefault();
     });
 

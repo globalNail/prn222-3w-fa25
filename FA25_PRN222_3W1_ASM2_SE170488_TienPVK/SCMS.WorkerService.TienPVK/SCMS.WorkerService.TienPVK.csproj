@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SCMS.WorkerService.TienPVK-420373a3-ac9a-4cfb-b8f4-b059cddac52a</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
+	<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SCMS.Service.TienPVK\SCMS.Service.TienPVK.csproj" />
+  </ItemGroup>
+</Project>
