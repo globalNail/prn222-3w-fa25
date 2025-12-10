@@ -26,7 +26,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="ClubsTienPvk.CategoryIdtienPvk" class="control-label"></label>
-                <select asp-for="ClubsTienPvk.CategoryIdtienPvk" class="form-control" asp-items="ViewBag.CategoryIdtienPvk"></select>
+                <select asp-for="ClubsTienPvk.CategoryIdtienPvk" class="form-control"
+                    asp-items="ViewBag.CategoryIdtienPvk"></select>
                 <span asp-validation-for="ClubsTienPvk.CategoryIdtienPvk" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -56,7 +57,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="ClubsTienPvk.ManagerUserId" class="control-label"></label>
-                <select asp-for="ClubsTienPvk.ManagerUserId" class="form-control" asp-items="ViewBag.ManagerUserId"></select>
+                <select asp-for="ClubsTienPvk.ManagerUserId" class="form-control"
+                    asp-items="ViewBag.ManagerUserId"></select>
                 <span asp-validation-for="ClubsTienPvk.ManagerUserId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -66,12 +68,14 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ClubsTienPvk.IsOpenToJoin" /> @Html.DisplayNameFor(model => model.ClubsTienPvk.IsOpenToJoin)
+                    <input class="form-check-input" asp-for="ClubsTienPvk.IsOpenToJoin" /> 
+                    @Html.DisplayNameFor(model => model.ClubsTienPvk.IsOpenToJoin)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ClubsTienPvk.RequiresApproval" /> @Html.DisplayNameFor(model => model.ClubsTienPvk.RequiresApproval)
+                    <input class="form-check-input" asp-for="ClubsTienPvk.RequiresApproval" />
+                    @Html.DisplayNameFor(model => model.ClubsTienPvk.RequiresApproval)
                 </label>
             </div>
             <div class="form-group">
@@ -101,7 +105,8 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ClubsTienPvk.IsDeleted" disabled/> @Html.DisplayNameFor(model => model.ClubsTienPvk.IsDeleted)
+                    <input class="form-check-input" asp-for="ClubsTienPvk.IsDeleted" disabled />
+                    @Html.DisplayNameFor(model => model.ClubsTienPvk.IsDeleted)
                 </label>
             </div>
             <div class="form-group">
@@ -116,5 +121,58 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/zPaymentHub").build();
+
+    connection.start()
+        .then(() => console.log("Connected to the SignalR Hub"))
+        .catch(err => console.error(err.toString()));
+
+    document.getElementById("btnUpdateSignalR").addEventListener("click", function (event)
+    {
+
+        var dataObj = JSON.stringify({
+            CashDepositSlipId: document.getElementById("TransactionCashDepositSlip_CashDepositSlipId").value,
+            Code: document.getElementById("TransactionCashDepositSlip_Code").value,
+            CashDepositDate: document.getElementById("TransactionCashDepositSlip_CashDepositDate").value,
+            DepositorName: document.getElementById("TransactionCashDepositSlip_DepositorName").value,
+            Address: document.getElementById("TransactionCashDepositSlip_Address").value,
+            AccountNo: document.getElementById("TransactionCashDepositSlip_AccountNo").value,
+            AccountName: document.getElementById("TransactionCashDepositSlip_AccountName").value,
+            WithBank: document.getElementById("TransactionCashDepositSlip_WithBank").value,
+            CurrencyCode: document.getElementById("TransactionCashDepositSlip_CurrencyCode").value,
+            AmountInFigures: document.getElementById("TransactionCashDepositSlip_AmountInFigures").value,
+            AmountInWord: document.getElementById("TransactionCashDepositSlip_AmountInWord").value,
+            Remarks: document.getElementById("TransactionCashDepositSlip_Remarks").value,
+            CashierCode: document.getElementById("TransactionCashDepositSlip_CashierCode").value,
+            TellerCode: document.getElementById("TransactionCashDepositSlip_TellerCode").value,
+            Supervisor: document.getElementById("TransactionCashDepositSlip_Supervisor").value,
+            StatusCode: document.getElementById("TransactionCashDepositSlip_StatusCode").value,
+            IsActive: document.getElementById("TransactionCashDepositSlip_IsActive").value,
+            RequestCode: document.getElementById("TransactionCashDepositSlip_RequestCode").value,
+            ApplicationCode: document.getElementById("TransactionCashDepositSlip_ApplicationCode").value,
+            CreatedDate: document.getElementById("TransactionCashDepositSlip_CreatedDate").value,
+            CreatedBy: document.getElementById("TransactionCashDepositSlip_CreatedBy").value,
+            ModifiedDate: document.getElementById("TransactionCashDepositSlip_ModifiedDate").value,
+            ModifiedBy: document.getElementById("TransactionCashDepositSlip_ModifiedBy").value
+            //: document.getElementById("TransactionCashDepositSlip_").value,
+        });
+
+        console.log(dataObj);
+
+        connection.invoke("HubUpdate_TransactionCashDepositSlip", dataObj)
+            .catch(err => console.error(err.toString()));
+
+        event.preventDefault();
+
+    });
+
+</script>

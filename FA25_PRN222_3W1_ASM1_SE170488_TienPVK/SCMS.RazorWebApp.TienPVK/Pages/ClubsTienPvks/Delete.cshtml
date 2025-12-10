@@ -139,20 +139,19 @@
         .configureLogging(signalR.LogLevel.None) // Off logging; change to Information for debugging
         .build();
 
-    connection.on("DeleteClub", function (clubId)
+    connection.on("DeleteClub", (clubId) =>
     {
         console.log("Club deleted successfully, redirecting...");
         // Redirect to Index page after receiving confirmation
         window.location.href = "/ClubsTienPvks/Index";
     });
 
-    connection.start().then(function ()
-    {
-        document.getElementById("btnHubDelete").disabled = false;
-    }).catch(function (err)
-    {
-        return console.error("error on start:" + err.toString());
-    });
+    connection.start()
+        .then(() => {
+            console.log("Connected to the SignalR Hub");
+            document.getElementById("btnHubDelete").disabled = false; 
+        })    
+        .catch(err => console.error("error on start:" + err.toString()));
 
     // document.getElementById("btnHubDelete").addEventListener("click", function (event)
     // {
@@ -171,7 +170,7 @@
     {
         const obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
 
-        connection.invoke("DeleteClub", obj)
+        connection.invoke("SendDeleteClub", obj)
             .then(() => console.log("Delete successful"))
             .catch(err => console.error("Action fail:", err));
 

@@ -214,3 +214,33 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/zPaymentHub").build();
+
+    connection.start()
+        .then(() => console.log("Connected to the SignalR Hub"))
+        .catch(err => console.error(err.toString()));
+
+    document.getElementById("btnCreateSignal").addEventListener("click", function (event) {
+
+        var dataObj = JSON.stringify({
+            CashDepositSlipId: document.getElementById("TransactionCashDepositSlip_CashDepositSlipId").value,
+            Code: document.getElementById("TransactionCashDepositSlip_Code").value,
+            CashDepositDate: document.getElementById("TransactionCashDepositSlip_CashDepositDate").value,
+            DepositorName: document.getElementById("TransactionCashDepositSlip_DepositorName").value,
+            Address: document.getElementById("TransactionCashDepositSlip_Address").value,
+            AccountNo: document.getElementById("TransactionCashDepositSlip_AccountNo").value,
+            AccountName: document.getElementById("TransactionCashDepositSlip_AccountName").value,
+        });
+
+        connection.invoke("HubCreate_TransactionCashDepositSlip", dataObj)
+            .catch(err => console.error(err.toString()));
+
+        event.preventDefault();
+    });
+
+</script>

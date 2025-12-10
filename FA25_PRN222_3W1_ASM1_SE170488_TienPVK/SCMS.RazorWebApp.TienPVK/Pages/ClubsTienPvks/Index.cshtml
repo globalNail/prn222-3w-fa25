@@ -154,9 +154,6 @@
                     {
                         colDiv.remove();
                         console.log("Card removed from DOM");
-
-                        // Update stats
-                        updateStats();
                     }, 400);
                 }
             } else
@@ -164,12 +161,6 @@
                 console.warn("Card not found with ID:", clubId);
             }
         });
-
-        function updateStats()
-        {
-            // Reload page to update stats (or you can update them manually)
-            location.reload();
-        }
     </script>
 }
 

@@ -12,7 +12,7 @@ public class ClubHub : Hub
         _service = service;
     }
 
-    public async Task DeleteClub(string clubId)
+    public async Task SendDeleteClub(string clubId)
     {
         // Delete the club from database
         var result = await _service.DeleteAsync(Int32.Parse(clubId));
