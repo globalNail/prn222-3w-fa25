@@ -1,5 +1,4 @@
-﻿
-@page
+﻿@page
 @model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.CreateModel
 
 @{
@@ -132,11 +131,40 @@
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="bi bi-check-circle"></i> Create Club
                             </button>
+                            <button type="button" class="btn btn-success btn-lg" id="btnCreateSignal"
+                                data-bs-toggle="modal" data-bs-target="#createModal">
+                                <i class="bi bi-broadcast"></i> Create via SignalR
+                            </button>
                             <a asp-page="Index" class="btn btn-outline-secondary btn-lg">
                                 <i class="bi bi-x-circle"></i> Cancel
                             </a>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Modal for Create Confirmation -->
+        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="createModalLabel">
+                            <i class="bi bi-broadcast"></i> Confirm Create via SignalR
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to create this club via SignalR?</p>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> This will broadcast the creation to all connected clients.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success" id="confirmCreate">Create</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -225,22 +253,33 @@
         .then(() => console.log("Connected to the SignalR Hub"))
         .catch(err => console.error(err.toString()));
 
-    document.getElementById("btnCreateSignal").addEventListener("click", function (event) {
+    document.getElementById("btnCreateSignal").addEventListener("click", function (event)
+    {
+        // Handle confirm create button in modal
+        document.getElementById("confirmCreate").addEventListener("click", function ()
+        {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
 
-        var dataObj = JSON.stringify({
-            CashDepositSlipId: document.getElementById("TransactionCashDepositSlip_CashDepositSlipId").value,
-            Code: document.getElementById("TransactionCashDepositSlip_Code").value,
-            CashDepositDate: document.getElementById("TransactionCashDepositSlip_CashDepositDate").value,
-            DepositorName: document.getElementById("TransactionCashDepositSlip_DepositorName").value,
-            Address: document.getElementById("TransactionCashDepositSlip_Address").value,
-            AccountNo: document.getElementById("TransactionCashDepositSlip_AccountNo").value,
-            AccountName: document.getElementById("TransactionCashDepositSlip_AccountName").value,
+            var dataObj = JSON.stringify({
+                CashDepositSlipId: document.getElementById("TransactionCashDepositSlip_CashDepositSlipId").value,
+                Code: document.getElementById("TransactionCashDepositSlip_Code").value,
+                CashDepositDate: document.getElementById("TransactionCashDepositSlip_CashDepositDate").value,
+                DepositorName: document.getElementById("TransactionCashDepositSlip_DepositorName").value,
+                Address: document.getElementById("TransactionCashDepositSlip_Address").value,
+                AccountNo: document.getElementById("TransactionCashDepositSlip_AccountNo").value,
+                AccountName: document.getElementById("TransactionCashDepositSlip_AccountName").value,
+            });
+
+            connection.invoke("HubCreate_TransactionCashDepositSlip", dataObj)
+                //     .catch(err => console.error(err.toString()));
+
+                // event.preventDefault();
+                .then(() =>
+                {
+                    console.log("Create successful");
+                    modal.hide();
+                })
+                .catch(err => console.error(err.toString()));
         });
-
-        connection.invoke("HubCreate_TransactionCashDepositSlip", dataObj)
-            .catch(err => console.error(err.toString()));
-
-        event.preventDefault();
-    });
 
 </script>

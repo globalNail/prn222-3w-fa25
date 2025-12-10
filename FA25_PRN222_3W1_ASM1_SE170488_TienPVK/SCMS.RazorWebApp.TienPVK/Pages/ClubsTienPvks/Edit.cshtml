@@ -111,6 +111,10 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="button" class="btn btn-warning" id="btnUpdateSignalR" data-bs-toggle="modal"
+                    data-bs-target="#updateModal">
+                    <i class="bi bi-broadcast"></i> Update via SignalR
+                </button>
             </div>
         </form>
     </div>
@@ -118,6 +122,30 @@
 
 <div>
     <a asp-page="./Index">Back to List</a>
+</div>
+
+<!-- Bootstrap Modal for Update Confirmation -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="updateModalLabel">
+                    <i class="bi bi-broadcast"></i> Confirm Update via SignalR
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to update this club via SignalR?</p>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> This will broadcast the update to all connected clients.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" id="confirmUpdate">Update</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -136,8 +164,12 @@
         .then(() => console.log("Connected to the SignalR Hub"))
         .catch(err => console.error(err.toString()));
 
-    document.getElementById("btnUpdateSignalR").addEventListener("click", function (event)
+    // document.getElementById("btnUpdateSignalR").addEventListener("click", function (event)
+    // {
+    // Handle confirm update button in modal
+    document.getElementById("confirmUpdate").addEventListener("click", function ()
     {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('updateModal'));
 
         var dataObj = JSON.stringify({
             CashDepositSlipId: document.getElementById("TransactionCashDepositSlip_CashDepositSlipId").value,
@@ -169,10 +201,15 @@
         console.log(dataObj);
 
         connection.invoke("HubUpdate_TransactionCashDepositSlip", dataObj)
+        //     .catch(err => console.error(err.toString()));
+
+        // event.preventDefault();
+            .then(() =>
+            {
+                console.log("Update successful");
+                modal.hide();
+            })
             .catch(err => console.error(err.toString()));
-
-        event.preventDefault();
-
     });
 
 </script>
