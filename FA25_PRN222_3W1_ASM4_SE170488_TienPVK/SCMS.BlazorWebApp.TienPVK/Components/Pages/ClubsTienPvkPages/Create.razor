@@ -1,8 +1,9 @@
 ﻿@page "/clubstienpvks/create"
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
-@inject IDbContextFactory<SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext> DbFactory
+@using SCMS.Service.TienPVK
 @inject NavigationManager NavigationManager
+@inject AppServiceProvider _service;
 
 <PageTitle>Create</PageTitle>
 
@@ -16,12 +17,12 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="clubcode" class="form-label">ClubCode:</label> 
+                <label for="clubcode" class="form-label">Club Code:</label> 
                 <InputText id="clubcode" @bind-Value="ClubsTienPvk.ClubCode" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.ClubCode" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="clubname" class="form-label">ClubName:</label> 
+                <label for="clubname" class="form-label">Club Name:</label> 
                 <InputText id="clubname" @bind-Value="ClubsTienPvk.ClubName" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.ClubName" class="text-danger" /> 
             </div>        
@@ -36,7 +37,7 @@
                 <ValidationMessage For="() => ClubsTienPvk.Description" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="foundeddate" class="form-label">FoundedDate:</label> 
+                <label for="foundeddate" class="form-label">Founded Date:</label> 
                 <InputDate id="foundeddate" @bind-Value="ClubsTienPvk.FoundedDate" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.FoundedDate" class="text-danger" /> 
             </div>        
@@ -61,17 +62,17 @@
                 <ValidationMessage For="() => ClubsTienPvk.ManagerUserId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="memberlimit" class="form-label">MemberLimit:</label> 
+                <label for="memberlimit" class="form-label">Member Limit:</label> 
                 <InputNumber id="memberlimit" @bind-Value="ClubsTienPvk.MemberLimit" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.MemberLimit" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="isopentojoin" class="form-label">IsOpenToJoin:</label> 
+                <label for="isopentojoin" class="form-label">Is Open To Join:</label> 
                 <InputCheckbox id="isopentojoin" @bind-Value="ClubsTienPvk.IsOpenToJoin" class="form-check-input" /> 
                 <ValidationMessage For="() => ClubsTienPvk.IsOpenToJoin" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="requiresapproval" class="form-label">RequiresApproval:</label> 
+                <label for="requiresapproval" class="form-label">Requires Approval:</label> 
                 <InputCheckbox id="requiresapproval" @bind-Value="ClubsTienPvk.RequiresApproval" class="form-check-input" /> 
                 <ValidationMessage For="() => ClubsTienPvk.RequiresApproval" class="text-danger" /> 
             </div>        
@@ -81,29 +82,24 @@
                 <ValidationMessage For="() => ClubsTienPvk.Status" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="createdat" class="form-label">CreatedAt:</label> 
+                <label for="createdat" class="form-label">Created At:</label> 
                 <InputDate id="createdat" @bind-Value="ClubsTienPvk.CreatedAt" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.CreatedAt" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <label for="createdby" class="form-label">Created By:</label> 
                 <InputText id="createdby" @bind-Value="ClubsTienPvk.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.CreatedBy" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="modifiedby" class="form-label">ModifiedBy:</label> 
+                <label for="modifiedby" class="form-label">Modified By:</label> 
                 <InputText id="modifiedby" @bind-Value="ClubsTienPvk.ModifiedBy" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.ModifiedBy" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="modifiedat" class="form-label">ModifiedAt:</label> 
+                <label for="modifiedat" class="form-label">Modified At:</label> 
                 <InputDate id="modifiedat" @bind-Value="ClubsTienPvk.ModifiedAt" class="form-control" /> 
                 <ValidationMessage For="() => ClubsTienPvk.ModifiedAt" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="isdeleted" class="form-label">IsDeleted:</label> 
-                <InputCheckbox id="isdeleted" @bind-Value="ClubsTienPvk.IsDeleted" class="form-check-input" /> 
-                <ValidationMessage For="() => ClubsTienPvk.IsDeleted" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
@@ -115,15 +111,34 @@
 </div>
 
 @code {
+    private List<ClubCategoriesTienPvk> categories = new();
+    private List<SystemAccount> accounts = new();
+
+
     [SupplyParameterFromForm]
     private ClubsTienPvk ClubsTienPvk { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load dropdown data
+        categories = await _service.CategoryService.GetAllAsync();
+        accounts = await _service.AccountService.GetAllAsync();
+
+        // Set mặc định để tránh lỗi bind int không nullable
+        if (ClubsTienPvk.CategoryIdtienPvk == 0 && categories.Count > 0)
+            ClubsTienPvk.CategoryIdtienPvk = categories[0].CategoryIdtienPvk;
+
+        if (ClubsTienPvk.ManagerUserId == 0 && accounts.Count > 0)
+            ClubsTienPvk.ManagerUserId = accounts[0].UserAccountId;
+    }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddClubsTienPvk()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.ClubsTienPvks.Add(ClubsTienPvk);
-        await context.SaveChangesAsync();
+        // using var context = DbFactory.CreateDbContext();
+        // context.ClubsTienPvks.Add(ClubsTienPvk);
+        // await context.SaveChangesAsync();
+        await _service.ClubService.CreateAsync(ClubsTienPvk);
         NavigationManager.NavigateTo("/clubstienpvks");
     }
 }

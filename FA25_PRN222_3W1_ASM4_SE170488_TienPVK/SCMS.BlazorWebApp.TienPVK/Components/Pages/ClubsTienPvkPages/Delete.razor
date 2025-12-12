@@ -1,7 +1,8 @@
 ﻿@page "/clubstienpvks/delete"
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
-@inject IDbContextFactory<SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext> DbFactory
+@using SCMS.Service.TienPVK
+@inject AppServiceProvider _service;
 @inject NavigationManager NavigationManager
 
 <PageTitle>Delete</PageTitle>
@@ -104,8 +105,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        clubstienpvk = await context.ClubsTienPvks.FirstOrDefaultAsync(m => m.ClubIdtienPvk == ClubIdtienPvk);
+        clubstienpvk = await _service.ClubService.GetByIdAsync(ClubIdtienPvk);
 
         if (clubstienpvk is null)
         {
@@ -115,9 +115,17 @@
 
     private async Task DeleteClubsTienPvk()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.ClubsTienPvks.Remove(clubstienpvk!);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/clubstienpvks");
+        try
+        {
+
+            await _service.ClubService.DeleteAsync(clubstienpvk!.ClubIdtienPvk);
+            NavigationManager.NavigateTo("/clubstienpvks");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (dbEx) as needed
+            // Show a user-friendly error message
+            return;
+        }
     }
 }

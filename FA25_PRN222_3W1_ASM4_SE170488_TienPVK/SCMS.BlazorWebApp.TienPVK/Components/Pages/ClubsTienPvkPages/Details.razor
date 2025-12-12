@@ -1,7 +1,8 @@
 ﻿@page "/clubstienpvks/details"
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
-@inject IDbContextFactory<SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext> DbFactory
+@using SCMS.Service.TienPVK
+@inject AppServiceProvider _service;
 @inject NavigationManager NavigationManager
 
 <PageTitle>Details</PageTitle>
@@ -17,15 +18,15 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">ClubCode</dt>
+            <dt class="col-sm-2">Club Code</dt>
             <dd class="col-sm-10">@clubstienpvk.ClubCode</dd>
-            <dt class="col-sm-2">ClubName</dt>
+            <dt class="col-sm-2">Club Name</dt>
             <dd class="col-sm-10">@clubstienpvk.ClubName</dd>
             <dt class="col-sm-2">CategoryIdtienPvk</dt>
             <dd class="col-sm-10">@clubstienpvk.CategoryIdtienPvk</dd>
             <dt class="col-sm-2">Description</dt>
             <dd class="col-sm-10">@clubstienpvk.Description</dd>
-            <dt class="col-sm-2">FoundedDate</dt>
+            <dt class="col-sm-2">Founded Date</dt>
             <dd class="col-sm-10">@clubstienpvk.FoundedDate</dd>
             <dt class="col-sm-2">Email</dt>
             <dd class="col-sm-10">@clubstienpvk.Email</dd>
@@ -33,13 +34,13 @@
             <dd class="col-sm-10">@clubstienpvk.Phone</dd>
             <dt class="col-sm-2">Address</dt>
             <dd class="col-sm-10">@clubstienpvk.Address</dd>
-            <dt class="col-sm-2">ManagerUserId</dt>
+            <dt class="col-sm-2">Manager User Id</dt>
             <dd class="col-sm-10">@clubstienpvk.ManagerUserId</dd>
-            <dt class="col-sm-2">MemberLimit</dt>
+            <dt class="col-sm-2">Member Limit</dt>
             <dd class="col-sm-10">@clubstienpvk.MemberLimit</dd>
-            <dt class="col-sm-2">IsOpenToJoin</dt>
+            <dt class="col-sm-2">Is Open To Join</dt>
             <dd class="col-sm-10">@clubstienpvk.IsOpenToJoin</dd>
-            <dt class="col-sm-2">RequiresApproval</dt>
+            <dt class="col-sm-2">Requires Approval</dt>
             <dd class="col-sm-10">@clubstienpvk.RequiresApproval</dd>
             <dt class="col-sm-2">Status</dt>
             <dd class="col-sm-10">@clubstienpvk.Status</dd>
@@ -47,12 +48,10 @@
             <dd class="col-sm-10">@clubstienpvk.CreatedAt</dd>
             <dt class="col-sm-2">CreatedBy</dt>
             <dd class="col-sm-10">@clubstienpvk.CreatedBy</dd>
-            <dt class="col-sm-2">ModifiedBy</dt>
+            <dt class="col-sm-2">Modified By</dt>
             <dd class="col-sm-10">@clubstienpvk.ModifiedBy</dd>
-            <dt class="col-sm-2">ModifiedAt</dt>
+            <dt class="col-sm-2">Modified At</dt>
             <dd class="col-sm-10">@clubstienpvk.ModifiedAt</dd>
-            <dt class="col-sm-2">IsDeleted</dt>
-            <dd class="col-sm-10">@clubstienpvk.IsDeleted</dd>
         </dl>
         <div>
             <a href="@($"/clubstienpvks/edit?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")">Edit</a> |
@@ -69,8 +68,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        clubstienpvk = await context.ClubsTienPvks.FirstOrDefaultAsync(m => m.ClubIdtienPvk == ClubIdtienPvk);
+        clubstienpvk = await _service.ClubService.GetByIdAsync(ClubIdtienPvk);
 
         if (clubstienpvk is null)
         {

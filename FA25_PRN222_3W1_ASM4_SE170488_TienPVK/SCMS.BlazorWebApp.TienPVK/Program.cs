@@ -1,7 +1,5 @@
 using SCMS.BlazorWebApp.TienPVK.Components;
-using SCMS.Repository.TienPVK.Implements;
-using SCMS.Service.TienPVK.Implements;
-using Microsoft.EntityFrameworkCore;
+using SCMS.Service.TienPVK;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<SystemAccountService>();
-builder.Services.AddSingleton<ClubCategoriesTienPvkService>();
-builder.Services.AddSingleton<ClubsTienPvkService>();
+// Register individual services
+builder.Services.AddScoped<SystemAccountService>();
+builder.Services.AddScoped<ClubCategoriesTienPvkService>();
+builder.Services.AddScoped<ClubsTienPvkService>();
+
+builder.Services.AddScoped<AppServiceProvider>();
 
 var app = builder.Build();
 
