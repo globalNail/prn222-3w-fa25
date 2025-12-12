@@ -15,7 +15,7 @@
     <a href="clubstienpvks/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.ClubsTienPvks">
+<QuickGrid Class="table" Items="sessions" TGridItem="ClubsTienPvk">
     <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubCode" />
     <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubName" />
     <PropertyColumn Property="clubstienpvk => clubstienpvk.CategoryIdtienPvk" />
@@ -43,17 +43,21 @@
 </QuickGrid>
 
 @code {
-    private FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context = default!;
+    private IQueryable<ClubsTienPvk> sessions
+        = Enumerable.Empty<ClubsTienPvk>().AsQueryable();
 
-    protected override async Task OnInitialized()
+    private bool isLoading = true;
+    private string? loadError;
+
+    protected override async Task OnInitializedAsync()
     {
         await LoadClubs();
     }
 
-    private async Task LoadClubs ()
+    private async Task LoadClubs()
     {
-        context = await _service.GetAllAsync();
+        // sessions = await _service.GetAllAsync();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    // public async ValueTask DisposeAsync() => await sessions.DisposeAsync();
 }

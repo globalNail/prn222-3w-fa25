@@ -12,8 +12,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 
 // Register concrete classes directly (no interfaces)
-builder.Services.AddScoped<ClubsTienPvkRepository>();
-builder.Services.AddScoped<ClubCategoriesTienPvkRepository>();
 builder.Services.AddScoped<SystemAccountService>();
 builder.Services.AddScoped<ClubsTienPvkService>();
 builder.Services.AddScoped<ClubCategoriesTienPvkService>();

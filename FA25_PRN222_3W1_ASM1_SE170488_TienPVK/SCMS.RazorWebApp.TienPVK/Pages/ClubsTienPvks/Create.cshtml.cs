@@ -55,7 +55,7 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
             ClubsTienPvk.IsDeleted = false;
 
             // Remove navigation property validation errors
-            ModelState.Remove("ClubsTienPvk.CategoryIdtienPvkNavigation");
+            ModelState.Remove("ClubsTienPvk.Category");
             ModelState.Remove("ClubsTienPvk.ManagerUser");
             ModelState.Remove("ClubsTienPvk.Activities");
             ModelState.Remove("ClubsTienPvk.AttendanceSessions");

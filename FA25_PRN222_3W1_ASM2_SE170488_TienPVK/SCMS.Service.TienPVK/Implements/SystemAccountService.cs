@@ -8,9 +8,7 @@ public class SystemAccountService
 {
     private readonly SystemAccountRepository _repository;
 
-    public SystemAccountService() {
-        _repository ??= new SystemAccountRepository();
-    }
+    public SystemAccountService() => _repository ??= new SystemAccountRepository();
 
     public SystemAccountService(SystemAccountRepository repository) => _repository = repository;
 

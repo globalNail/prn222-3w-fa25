@@ -12,8 +12,6 @@ builder.Services.AddWindowsService(options =>
     options.ServiceName = "Clubs_Worker Service";
 });
 
-builder.Services.AddSingleton<ClubsTienPvkRepository>();
-builder.Services.AddSingleton<ClubCategoriesTienPvkRepository>();
 builder.Services.AddSingleton<SystemAccountService>();
 builder.Services.AddSingleton<ClubCategoriesTienPvkService>();
 builder.Services.AddSingleton<ClubsTienPvkService>();

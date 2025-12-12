@@ -13,7 +13,7 @@ public class ClubsTienPvkRepository : GenericRepository<ClubsTienPvk>
     public ClubsTienPvkRepository(FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context) => _context = context;
 
     public new async Task<List<ClubsTienPvk>> GetAllAsync() => await _context.ClubsTienPvks
-        .Include(c => c.CategoryIdtienPvkNavigation)
+        .Include(c => c.Category)
         .Include(c => c.ManagerUser)
         .Where(c => !c.IsDeleted)
         .OrderByDescending(c => c.CreatedAt)
@@ -21,7 +21,7 @@ public class ClubsTienPvkRepository : GenericRepository<ClubsTienPvk>
         .ToListAsync();
 
     public new async Task<ClubsTienPvk?> GetByIdAsync(int id) => await _context.ClubsTienPvks
-        .Include(c => c.CategoryIdtienPvkNavigation)
+        .Include(c => c.Category)
         .Include(c => c.ManagerUser)
         .AsNoTracking()
         .FirstOrDefaultAsync(c => c.ClubIdtienPvk == id && !c.IsDeleted);

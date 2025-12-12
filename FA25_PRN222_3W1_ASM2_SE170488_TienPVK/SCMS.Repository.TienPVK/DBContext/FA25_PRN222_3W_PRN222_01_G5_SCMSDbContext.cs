@@ -213,7 +213,7 @@ public partial class FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext : DbContext
                 .HasMaxLength(30)
                 .HasDefaultValue("Active");
 
-            entity.HasOne(d => d.CategoryIdtienPvkNavigation).WithMany(p => p.ClubsTienPvks)
+            entity.HasOne(d => d.Category).WithMany(p => p.ClubsTienPvks)
                 .HasForeignKey(d => d.CategoryIdtienPvk)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ClubsTienPVK_Category");

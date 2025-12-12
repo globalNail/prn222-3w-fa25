@@ -11,6 +11,7 @@ public class ClubCategoriesTienPvkRepository : GenericRepository<ClubCategoriesT
     {
     }
 
-    public ClubCategoriesTienPvkRepository(FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context) => _context = context;
-
+    public ClubCategoriesTienPvkRepository(FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context) : base(context)
+    {
+    }
 }

@@ -10,7 +10,9 @@ public class SystemAccountRepository : GenericRepository<SystemAccount>
     {
     }
 
-    public SystemAccountRepository(FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context) => _context = context;
+    public SystemAccountRepository(FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext context) : base(context)
+    {
+    }
 
     public async Task<SystemAccount> GetAccountAsync(string username, string password)
     {

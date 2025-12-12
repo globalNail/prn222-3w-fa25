@@ -47,7 +47,7 @@ public partial class ClubsTienPvk
 
     public virtual ICollection<AttendanceSession> AttendanceSessions { get; set; } = new List<AttendanceSession>();
 
-    public virtual ClubCategoriesTienPvk CategoryIdtienPvkNavigation { get; set; } = null!;
+    public virtual ClubCategoriesTienPvk Category { get; set; } = null!;
 
     public virtual ICollection<ClubFeePolicy> ClubFeePolicies { get; set; } = new List<ClubFeePolicy>();
 

@@ -8,7 +8,7 @@ public class ClubsTienPvkService : IClubsTienPvkService
 {
     private readonly ClubsTienPvkRepository _repository;
 
-    public ClubsTienPvkService(ClubsTienPvkRepository repository) => _repository = repository;
+    public ClubsTienPvkService() => _repository = new ClubsTienPvkRepository();
 
     public async Task<bool> AnyAsync(int categoryId) => await _repository.AnyAsync(categoryId);
 

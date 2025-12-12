@@ -6,8 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSingleton<ClubsTienPvkRepository>();
-builder.Services.AddSingleton<ClubCategoriesTienPvkRepository>();
 builder.Services.AddSingleton<SystemAccountService>();
 builder.Services.AddSingleton<ClubCategoriesTienPvkService>();
 builder.Services.AddSingleton<ClubsTienPvkService>();

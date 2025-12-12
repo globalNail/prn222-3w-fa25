@@ -45,7 +45,7 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
         public async Task<IActionResult> OnPostAsync()
         {
             ClubsTienPvk.ModifiedAt = DateTime.Now;
-            ModelState.Remove("ClubsTienPvk.CategoryIdtienPvkNavigation");
+            ModelState.Remove("ClubsTienPvk.Category");
             ModelState.Remove("ClubsTienPvk.ManagerUser");
             ModelState.Remove("ClubsTienPvk.Activities");
             ModelState.Remove("ClubsTienPvk.AttendanceSessions");
