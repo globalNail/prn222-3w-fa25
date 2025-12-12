@@ -1,5 +1,5 @@
 ﻿using SCMS.Domain.TienPVK.Models;
-using SCMS.Repository.TienPVK.Implements;
+using SCMS.Repository.TienPVK;
 using SCMS.Service.TienPVK.Interfaces;
 
 namespace SCMS.Service.TienPVK.Implements;
