@@ -1,0 +1,174 @@
+﻿@page "/clubstienpvks/edit"
+@using Microsoft.EntityFrameworkCore
+@using SCMS.Domain.TienPVK.Models
+@inject IDbContextFactory<SCMS.Repository.TienPVK.DBContext.FA25_PRN222_3W_PRN222_01_G5_SCMSDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>ClubsTienPvk</h2>
+<hr />
+@if (ClubsTienPvk is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="ClubsTienPvk" OnValidSubmit="UpdateClubsTienPvk" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="ClubsTienPvk.ClubIdtienPvk" value="@ClubsTienPvk.ClubIdtienPvk" />
+                <div class="mb-3">
+                    <label for="clubcode" class="form-label">ClubCode:</label>
+                    <InputText id="clubcode" @bind-Value="ClubsTienPvk.ClubCode" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.ClubCode" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="clubname" class="form-label">ClubName:</label>
+                    <InputText id="clubname" @bind-Value="ClubsTienPvk.ClubName" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.ClubName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="categoryidtienpvk" class="form-label">CategoryIdtienPvk:</label>
+                    <InputNumber id="categoryidtienpvk" @bind-Value="ClubsTienPvk.CategoryIdtienPvk" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.CategoryIdtienPvk" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="ClubsTienPvk.Description" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.Description" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="foundeddate" class="form-label">FoundedDate:</label>
+                    <InputDate id="foundeddate" @bind-Value="ClubsTienPvk.FoundedDate" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.FoundedDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <InputText id="email" @bind-Value="ClubsTienPvk.Email" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.Email" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone:</label>
+                    <InputText id="phone" @bind-Value="ClubsTienPvk.Phone" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.Phone" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address:</label>
+                    <InputText id="address" @bind-Value="ClubsTienPvk.Address" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.Address" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="manageruserid" class="form-label">ManagerUserId:</label>
+                    <InputNumber id="manageruserid" @bind-Value="ClubsTienPvk.ManagerUserId" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.ManagerUserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="memberlimit" class="form-label">MemberLimit:</label>
+                    <InputNumber id="memberlimit" @bind-Value="ClubsTienPvk.MemberLimit" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.MemberLimit" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isopentojoin" class="form-label">IsOpenToJoin:</label>
+                    <InputCheckbox id="isopentojoin" @bind-Value="ClubsTienPvk.IsOpenToJoin" class="form-check-input" />
+                    <ValidationMessage For="() => ClubsTienPvk.IsOpenToJoin" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="requiresapproval" class="form-label">RequiresApproval:</label>
+                    <InputCheckbox id="requiresapproval" @bind-Value="ClubsTienPvk.RequiresApproval" class="form-check-input" />
+                    <ValidationMessage For="() => ClubsTienPvk.RequiresApproval" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <InputText id="status" @bind-Value="ClubsTienPvk.Status" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.Status" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdat" class="form-label">CreatedAt:</label>
+                    <InputDate id="createdat" @bind-Value="ClubsTienPvk.CreatedAt" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.CreatedAt" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="ClubsTienPvk.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="modifiedby" class="form-label">ModifiedBy:</label>
+                    <InputText id="modifiedby" @bind-Value="ClubsTienPvk.ModifiedBy" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.ModifiedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="modifiedat" class="form-label">ModifiedAt:</label>
+                    <InputDate id="modifiedat" @bind-Value="ClubsTienPvk.ModifiedAt" class="form-control" />
+                    <ValidationMessage For="() => ClubsTienPvk.ModifiedAt" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isdeleted" class="form-label">IsDeleted:</label>
+                    <InputCheckbox id="isdeleted" @bind-Value="ClubsTienPvk.IsDeleted" class="form-check-input" />
+                    <ValidationMessage For="() => ClubsTienPvk.IsDeleted" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/clubstienpvks">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int ClubIdtienPvk { get; set; }
+
+    [SupplyParameterFromForm]
+    private ClubsTienPvk? ClubsTienPvk { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ClubsTienPvk ??= await context.ClubsTienPvks.FirstOrDefaultAsync(m => m.ClubIdtienPvk == ClubIdtienPvk);
+
+        if (ClubsTienPvk is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateClubsTienPvk()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(ClubsTienPvk!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ClubsTienPvkExists(ClubsTienPvk!.ClubIdtienPvk))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/clubstienpvks");
+    }
+
+    private bool ClubsTienPvkExists(int clubidtienpvk)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ClubsTienPvks.Any(e => e.ClubIdtienPvk == clubidtienpvk);
+    }
+}
