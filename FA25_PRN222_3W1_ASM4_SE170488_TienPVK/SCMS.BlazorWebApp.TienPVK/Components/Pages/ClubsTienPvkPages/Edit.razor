@@ -1,9 +1,12 @@
 ﻿@page "/clubstienpvks/edit"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
 @using SCMS.Service.TienPVK
-@inject AppServiceProvider _service;
+@inject AppServiceProvider Service;
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Edit</PageTitle>
 
@@ -213,7 +216,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ClubsTienPvk = await _service.ClubService.GetByIdAsync(ClubIdtienPvk);
+        ClubsTienPvk = await Service.ClubService.GetByIdAsync(ClubIdtienPvk);
 
         if (ClubsTienPvk is null)
         {
@@ -227,7 +230,7 @@ else
     {
         try
         {
-            await _service.ClubService.UpdateAsync(ClubsTienPvk!);
+            await Service.ClubService.UpdateAsync(ClubsTienPvk!);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -246,6 +249,6 @@ else
 
     private async Task<bool> ClubsTienPvkExists(int clubidtienpvk)
     {
-        return await _service.ClubService.AnyAsync(clubidtienpvk);
+        return await Service.ClubService.AnyAsync(clubidtienpvk);
     }
 }

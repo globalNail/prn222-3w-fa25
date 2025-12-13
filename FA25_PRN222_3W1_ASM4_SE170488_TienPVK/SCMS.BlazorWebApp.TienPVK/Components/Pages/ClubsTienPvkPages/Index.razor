@@ -1,11 +1,14 @@
 ﻿@page "/clubstienpvks"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
 @using SCMS.Repository.TienPVK.DBContext
 @using SCMS.Service.TienPVK
 @* @implements IAsyncDisposable *@
-@inject AppServiceProvider _service;
+@inject AppServiceProvider Service;
+
 
 <PageTitle>Clubs</PageTitle>
 
@@ -55,7 +58,7 @@
 
     private async Task LoadClubs()
     {
-        var data = await _service.ClubService.GetAllAsync();
+        var data = await Service.ClubService.GetAllAsync();
         sessions = data.AsQueryable();
     }
 

@@ -1,7 +1,13 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
 
-<h1>Student Clubs!</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1>Welcome back @context.User.FindFirst("FullName")?.Value!</h1>
+    </Authorized>
+</AuthorizeView>
 
 Welcome to clubs app.

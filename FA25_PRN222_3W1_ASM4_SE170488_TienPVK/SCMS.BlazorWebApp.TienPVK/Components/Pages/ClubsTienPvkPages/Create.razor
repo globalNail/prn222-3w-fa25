@@ -1,9 +1,12 @@
 ﻿@page "/clubstienpvks/create"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
 @using SCMS.Service.TienPVK
 @inject NavigationManager NavigationManager
-@inject AppServiceProvider _service;
+@inject AppServiceProvider Service;
+@rendermode InteractiveServer
 
 <PageTitle>Create</PageTitle>
 
@@ -121,8 +124,8 @@
     protected override async Task OnInitializedAsync()
     {
         // Load dropdown data
-        categories = await _service.CategoryService.GetAllAsync();
-        accounts = await _service.AccountService.GetAllAsync();
+        categories = await Service.CategoryService.GetAllAsync();
+        accounts = await Service.AccountService.GetAllAsync();
 
         // Set mặc định để tránh lỗi bind int không nullable
         if (ClubsTienPvk.CategoryIdtienPvk == 0 && categories.Count > 0)
@@ -138,7 +141,7 @@
         // using var context = DbFactory.CreateDbContext();
         // context.ClubsTienPvks.Add(ClubsTienPvk);
         // await context.SaveChangesAsync();
-        await _service.ClubService.CreateAsync(ClubsTienPvk);
+        await Service.ClubService.CreateAsync(ClubsTienPvk);
         NavigationManager.NavigateTo("/clubstienpvks");
     }
 }

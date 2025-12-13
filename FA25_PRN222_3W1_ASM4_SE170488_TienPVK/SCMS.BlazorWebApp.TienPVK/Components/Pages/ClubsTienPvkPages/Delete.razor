@@ -1,9 +1,12 @@
 ﻿@page "/clubstienpvks/delete"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using SCMS.Domain.TienPVK.Models
 @using SCMS.Service.TienPVK
-@inject AppServiceProvider _service;
+@inject AppServiceProvider Service;
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Delete</PageTitle>
 
@@ -105,7 +108,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        clubstienpvk = await _service.ClubService.GetByIdAsync(ClubIdtienPvk);
+        clubstienpvk = await Service.ClubService.GetByIdAsync(ClubIdtienPvk);
 
         if (clubstienpvk is null)
         {
@@ -118,7 +121,7 @@
         try
         {
 
-            await _service.ClubService.DeleteAsync(clubstienpvk!.ClubIdtienPvk);
+            await Service.ClubService.DeleteAsync(clubstienpvk!.ClubIdtienPvk);
             NavigationManager.NavigateTo("/clubstienpvks");
         }
         catch (Exception ex)

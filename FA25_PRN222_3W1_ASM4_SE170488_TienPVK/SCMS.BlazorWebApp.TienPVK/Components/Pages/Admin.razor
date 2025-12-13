@@ -1,0 +1,49 @@
+@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "1")]
+
+<PageTitle>Admin Dashboard</PageTitle>
+
+<div class="container mt-4">
+    <h1>Admin Dashboard</h1>
+    <div class="alert alert-info">
+        <i class="bi bi-shield-check"></i>
+        This page is only accessible to administrators (Role ID: 1)
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-people"></i> Manage Users
+                    </h5>
+                    <p class="card-text">View and manage system users</p>
+                    <a href="#" class="btn btn-primary">Go to Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-gear"></i> System Settings
+                    </h5>
+                    <p class="card-text">Configure system settings</p>
+                    <a href="#" class="btn btn-primary">Settings</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-graph-up"></i> Reports
+                    </h5>
+                    <p class="card-text">View system reports</p>
+                    <a href="#" class="btn btn-primary">Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

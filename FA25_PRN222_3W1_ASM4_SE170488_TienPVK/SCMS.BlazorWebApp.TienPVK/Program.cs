@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using SCMS.BlazorWebApp.TienPVK.Components;
+using SCMS.BlazorWebApp.TienPVK.Services;
 using SCMS.Service.TienPVK;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,12 +10,31 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// builder.Services.AddServerSideBlazor();
+
 // Register individual services
 builder.Services.AddScoped<SystemAccountService>();
 builder.Services.AddScoped<ClubCategoriesTienPvkService>();
 builder.Services.AddScoped<ClubsTienPvkService>();
-
 builder.Services.AddScoped<AppServiceProvider>();
+
+// Add HttpContextAccessor for accessing HttpContext in components
+builder.Services.AddHttpContextAccessor();
+
+// Add Authentication & Authorization
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/forbidden";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    });
+
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
+
+// Register Authentication State Provider
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
 var app = builder.Build();
 
@@ -29,6 +51,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
