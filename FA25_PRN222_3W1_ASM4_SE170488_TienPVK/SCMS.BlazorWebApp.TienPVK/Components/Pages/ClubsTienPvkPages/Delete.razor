@@ -8,95 +8,146 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Delete</PageTitle>
+<PageTitle>Delete Club</PageTitle>
 
-<h1>Delete</h1>
+<style>
+    .delete-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+    }
 
-<p>Are you sure you want to delete this?</p>
-<div>
-    <h2>ClubsTienPvk</h2>
-    <hr />
+    .delete-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .delete-warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 8px;
+    }
+
+    .detail-row {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #f5576c;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-delete:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+    }
+</style>
+
+<div class="container mt-4">
     @if (clubstienpvk is null)
     {
-        <p><em>Loading...</em></p>
+        <div class="text-center py-5">
+            <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading club details...</p>
+        </div>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">ClubCode</dt>
-            <dd class="col-sm-10">@clubstienpvk.ClubCode</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ClubName</dt>
-            <dd class="col-sm-10">@clubstienpvk.ClubName</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CategoryIdtienPvk</dt>
-            <dd class="col-sm-10">@clubstienpvk.CategoryIdtienPvk</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Description</dt>
-            <dd class="col-sm-10">@clubstienpvk.Description</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">FoundedDate</dt>
-            <dd class="col-sm-10">@clubstienpvk.FoundedDate</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Email</dt>
-            <dd class="col-sm-10">@clubstienpvk.Email</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Phone</dt>
-            <dd class="col-sm-10">@clubstienpvk.Phone</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Address</dt>
-            <dd class="col-sm-10">@clubstienpvk.Address</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ManagerUserId</dt>
-            <dd class="col-sm-10">@clubstienpvk.ManagerUserId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">MemberLimit</dt>
-            <dd class="col-sm-10">@clubstienpvk.MemberLimit</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">IsOpenToJoin</dt>
-            <dd class="col-sm-10">@clubstienpvk.IsOpenToJoin</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">RequiresApproval</dt>
-            <dd class="col-sm-10">@clubstienpvk.RequiresApproval</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Status</dt>
-            <dd class="col-sm-10">@clubstienpvk.Status</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedAt</dt>
-            <dd class="col-sm-10">@clubstienpvk.CreatedAt</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@clubstienpvk.CreatedBy</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ModifiedBy</dt>
-            <dd class="col-sm-10">@clubstienpvk.ModifiedBy</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ModifiedAt</dt>
-            <dd class="col-sm-10">@clubstienpvk.ModifiedAt</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">IsDeleted</dt>
-            <dd class="col-sm-10">@clubstienpvk.IsDeleted</dd>
-        </dl>
-        <EditForm method="post" Model="clubstienpvk" OnValidSubmit="DeleteClubsTienPvk" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(clubstienpvk is null)">Delete</button> |
-            <a href="/clubstienpvks">Back to List</a>
-        </EditForm>
+    else
+    {
+        <div class="delete-header">
+            <h1 class="mb-2"><i class="bi bi-exclamation-triangle"></i> Delete Club</h1>
+            <p class="mb-0 opacity-75">Are you sure you want to delete this club?</p>
+        </div>
+
+        <div class="delete-warning">
+            <h5 class="mb-2"><i class="bi bi-exclamation-circle me-2"></i>Warning</h5>
+            <p class="mb-0">This action cannot be undone. All data associated with this club will be permanently deleted.
+            </p>
+        </div>
+
+        <div class="delete-card">
+            <div class="card-body p-0">
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Club Code</div>
+                        <div class="col-md-9">@clubstienpvk.ClubCode</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Club Name</div>
+                        <div class="col-md-9 fw-semibold">@clubstienpvk.ClubName</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Category</div>
+                        <div class="col-md-9">@clubstienpvk.Category?.CategoryName</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Description</div>
+                        <div class="col-md-9">@clubstienpvk.Description</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Founded Date</div>
+                        <div class="col-md-9">@clubstienpvk.FoundedDate.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Email</div>
+                        <div class="col-md-9">@clubstienpvk.Email</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label">Status</div>
+                        <div class="col-md-9"><span class="badge bg-primary">@clubstienpvk.Status</span></div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-light">
+                    <EditForm method="post" Model="clubstienpvk" OnValidSubmit="DeleteClubsTienPvk" FormName="delete"
+                        Enhance>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-delete" disabled="@(clubstienpvk is null)">
+                                <i class="bi bi-trash me-2"></i>Confirm Delete
+                            </button>
+                            <a href="/clubstienpvks" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
     }
 </div>
 

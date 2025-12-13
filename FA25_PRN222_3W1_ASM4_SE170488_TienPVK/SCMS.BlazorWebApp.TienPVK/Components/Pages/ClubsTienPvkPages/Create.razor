@@ -8,109 +8,194 @@
 @inject AppServiceProvider Service;
 @rendermode InteractiveServer
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Club</PageTitle>
 
-<h1>Create</h1>
+<style>
+    .create-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
 
-<h2>ClubsTienPvk</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .section-title {
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="create-header">
+        <h1 class="mb-2"><i class="bi bi-plus-circle"></i> Create New Club</h1>
+        <p class="mb-0 opacity-75">Fill in the details to create a new club</p>
+    </div>
+
+    <div class="form-card">
         <EditForm method="post" Model="ClubsTienPvk" OnValidSubmit="AddClubsTienPvk" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="clubcode" class="form-label">Club Code:</label> 
-                <InputText id="clubcode" @bind-Value="ClubsTienPvk.ClubCode" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.ClubCode" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="clubname" class="form-label">Club Name:</label> 
-                <InputText id="clubname" @bind-Value="ClubsTienPvk.ClubName" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.ClubName" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="categoryidtienpvk" class="form-label">CategoryIdtienPvk:</label> 
-                <InputNumber id="categoryidtienpvk" @bind-Value="ClubsTienPvk.CategoryIdtienPvk" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.CategoryIdtienPvk" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="description" class="form-label">Description:</label> 
-                <InputText id="description" @bind-Value="ClubsTienPvk.Description" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.Description" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="foundeddate" class="form-label">Founded Date:</label> 
-                <InputDate id="foundeddate" @bind-Value="ClubsTienPvk.FoundedDate" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.FoundedDate" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="email" class="form-label">Email:</label> 
-                <InputText id="email" @bind-Value="ClubsTienPvk.Email" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.Email" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone:</label> 
-                <InputText id="phone" @bind-Value="ClubsTienPvk.Phone" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.Phone" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="address" class="form-label">Address:</label> 
-                <InputText id="address" @bind-Value="ClubsTienPvk.Address" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.Address" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="manageruserid" class="form-label">ManagerUserId:</label> 
-                <InputNumber id="manageruserid" @bind-Value="ClubsTienPvk.ManagerUserId" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.ManagerUserId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="memberlimit" class="form-label">Member Limit:</label> 
-                <InputNumber id="memberlimit" @bind-Value="ClubsTienPvk.MemberLimit" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.MemberLimit" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="isopentojoin" class="form-label">Is Open To Join:</label> 
-                <InputCheckbox id="isopentojoin" @bind-Value="ClubsTienPvk.IsOpenToJoin" class="form-check-input" /> 
-                <ValidationMessage For="() => ClubsTienPvk.IsOpenToJoin" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="requiresapproval" class="form-label">Requires Approval:</label> 
-                <InputCheckbox id="requiresapproval" @bind-Value="ClubsTienPvk.RequiresApproval" class="form-check-input" /> 
-                <ValidationMessage For="() => ClubsTienPvk.RequiresApproval" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label> 
-                <InputText id="status" @bind-Value="ClubsTienPvk.Status" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.Status" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="createdat" class="form-label">Created At:</label> 
-                <InputDate id="createdat" @bind-Value="ClubsTienPvk.CreatedAt" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.CreatedAt" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="createdby" class="form-label">Created By:</label> 
-                <InputText id="createdby" @bind-Value="ClubsTienPvk.CreatedBy" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.CreatedBy" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="modifiedby" class="form-label">Modified By:</label> 
-                <InputText id="modifiedby" @bind-Value="ClubsTienPvk.ModifiedBy" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.ModifiedBy" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="modifiedat" class="form-label">Modified At:</label> 
-                <InputDate id="modifiedat" @bind-Value="ClubsTienPvk.ModifiedAt" class="form-control" /> 
-                <ValidationMessage For="() => ClubsTienPvk.ModifiedAt" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+            <ValidationSummary class="alert alert-danger" role="alert" />
+
+            <div class="form-section">
+                <h5 class="section-title"><i class="bi bi-info-circle me-2"></i>Basic Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="clubcode" class="form-label fw-semibold">Club Code <span
+                                class="text-danger">*</span></label>
+                        <InputText id="clubcode" @bind-Value="ClubsTienPvk.ClubCode" class="form-control"
+                            placeholder="Enter club code" />
+                        <ValidationMessage For="() => ClubsTienPvk.ClubCode" class="text-danger" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="clubname" class="form-label fw-semibold">Club Name <span
+                                class="text-danger">*</span></label>
+                        <InputText id="clubname" @bind-Value="ClubsTienPvk.ClubName" class="form-control"
+                            placeholder="Enter club name" />
+                        <ValidationMessage For="() => ClubsTienPvk.ClubName" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="categoryidtienpvk" class="form-label fw-semibold">Category</label>
+                        <InputSelect id="categoryidtienpvk" @bind-Value="ClubsTienPvk.CategoryIdtienPvk"
+                            class="form-select">
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.CategoryIdtienPvk">@category.CategoryName</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => ClubsTienPvk.CategoryIdtienPvk" class="text-danger" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="foundeddate" class="form-label fw-semibold">Founded Date</label>
+                        <InputDate id="foundeddate" @bind-Value="ClubsTienPvk.FoundedDate" class="form-control" />
+                        <ValidationMessage For="() => ClubsTienPvk.FoundedDate" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label fw-semibold">Description</label>
+                    <InputTextArea id="description" @bind-Value="ClubsTienPvk.Description" class="form-control" rows="3"
+                        placeholder="Enter club description" />
+                    <ValidationMessage For="() => ClubsTienPvk.Description" class="text-danger" />
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h5 class="section-title"><i class="bi bi-envelope me-2"></i>Contact Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label fw-semibold">Email</label>
+                        <InputText id="email" type="email" @bind-Value="ClubsTienPvk.Email" class="form-control"
+                            placeholder="club@example.com" />
+                        <ValidationMessage For="() => ClubsTienPvk.Email" class="text-danger" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="phone" class="form-label fw-semibold">Phone</label>
+                        <InputText id="phone" @bind-Value="ClubsTienPvk.Phone" class="form-control"
+                            placeholder="+84 123 456 789" />
+                        <ValidationMessage For="() => ClubsTienPvk.Phone" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address" class="form-label fw-semibold">Address</label>
+                    <InputText id="address" @bind-Value="ClubsTienPvk.Address" class="form-control"
+                        placeholder="Enter club address" />
+                    <ValidationMessage For="() => ClubsTienPvk.Address" class="text-danger" />
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h5 class="section-title"><i class="bi bi-gear me-2"></i>Club Settings</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="manageruserid" class="form-label fw-semibold">Manager</label>
+                        <InputSelect id="manageruserid" @bind-Value="ClubsTienPvk.ManagerUserId" class="form-select">
+                            @foreach (var account in accounts)
+                            {
+                                <option value="@account.UserAccountId">@account.FullName (@account.UserName)</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => ClubsTienPvk.ManagerUserId" class="text-danger" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="memberlimit" class="form-label fw-semibold">Member Limit</label>
+                        <InputNumber id="memberlimit" @bind-Value="ClubsTienPvk.MemberLimit" class="form-control"
+                            placeholder="e.g., 100" />
+                        <ValidationMessage For="() => ClubsTienPvk.MemberLimit" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="form-check form-switch">
+                            <InputCheckbox id="isopentojoin" @bind-Value="ClubsTienPvk.IsOpenToJoin"
+                                class="form-check-input" />
+                            <label for="isopentojoin" class="form-check-label fw-semibold">Is Open To Join</label>
+                            <ValidationMessage For="() => ClubsTienPvk.IsOpenToJoin" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-check form-switch">
+                            <InputCheckbox id="requiresapproval" @bind-Value="ClubsTienPvk.RequiresApproval"
+                                class="form-check-input" />
+                            <label for="requiresapproval" class="form-check-label fw-semibold">Requires Approval</label>
+                            <ValidationMessage For="() => ClubsTienPvk.RequiresApproval" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="status" class="form-label fw-semibold">Status</label>
+                        <InputText id="status" @bind-Value="ClubsTienPvk.Status" class="form-control"
+                            placeholder="Active" />
+                        <ValidationMessage For="() => ClubsTienPvk.Status" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" class="btn btn-primary btn-lg px-4">
+                    <i class="bi bi-check-circle me-2"></i>Create Club
+                </button>
+                <a href="/clubstienpvks" class="btn btn-secondary btn-lg px-4">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                </a>
+            </div>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/clubstienpvks">Back to List</a>
 </div>
 
 @code {
@@ -135,8 +220,7 @@
             ClubsTienPvk.ManagerUserId = accounts[0].UserAccountId;
     }
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task AddClubsTienPvk()
+private async Task AddClubsTienPvk()
     {
         // using var context = DbFactory.CreateDbContext();
         // context.ClubsTienPvks.Add(ClubsTienPvk);

@@ -10,43 +10,107 @@
 @inject AppServiceProvider Service;
 
 
-<PageTitle>Clubs</PageTitle>
+<PageTitle>Clubs Management</PageTitle>
 
-<h1>Clubs</h1>
+<style>
+    .clubs-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
 
-<p>
-    <a href="clubstienpvks/create">Create New</a>
-</p>
+    .create-btn {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
 
-<QuickGrid Class="table" Items="sessions" TGridItem="ClubsTienPvk">
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubCode" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubName" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.CategoryIdtienPvk" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.Description" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.FoundedDate" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.Email" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.Phone" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.Address" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.ManagerUserId" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.MemberLimit" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.IsOpenToJoin" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.RequiresApproval" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.Status" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.CreatedAt" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.CreatedBy" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.ModifiedBy" />
-    <PropertyColumn Property="clubstienpvk => clubstienpvk.ModifiedAt" />
+    .create-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
 
-    <TemplateColumn Context="clubstienpvk">
-        <a href="@($"clubstienpvks/edit?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")">Edit</a> |
-        <a href="@($"clubstienpvks/details?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")">Details</a> |
-        <a href="@($"clubstienpvks/delete?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    .modern-table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .modern-table thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .modern-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .action-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .action-link:hover {
+        color: #764ba2;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="clubs-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="mb-2"><i class="bi bi-people-fill"></i> Clubs Management</h1>
+                <p class="mb-0 opacity-75">Manage all student clubs and organizations</p>
+            </div>
+            <a href="clubstienpvks/create" class="create-btn">
+                <i class="bi bi-plus-circle me-2"></i>Create New Club
+            </a>
+        </div>
+    </div>
+
+    <div class="modern-table">
+        <QuickGrid Class="table table-hover mb-0" Items="sessions" TGridItem="ClubsTienPvk">
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubCode" Title="Code" />
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubName" Title="Club Name" />
+            <TemplateColumn Title="Category">
+                @context.Category?.CategoryName
+            </TemplateColumn>
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.FoundedDate" Title="Founded" Format="dd/MM/yyyy" />
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.Email" Title="Email" />
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.Phone" Title="Phone" />
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.MemberLimit" Title="Member Limit" />
+            <PropertyColumn Property="clubstienpvk => clubstienpvk.Status" Title="Status" />
+
+            <TemplateColumn Title="Actions" Context="clubstienpvk">
+                <a href="@($"clubstienpvks/edit?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")" class="action-link me-2">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a>
+                <a href="@($"clubstienpvks/details?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")"
+                    class="action-link me-2">
+                    <i class="bi bi-eye"></i> Details
+                </a>
+                <a href="@($"clubstienpvks/delete?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")"
+                    class="action-link text-danger">
+                    <i class="bi bi-trash"></i> Delete
+                </a>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+</div>
 
 @code {
     private IQueryable<ClubsTienPvk> sessions
-        = Enumerable.Empty<ClubsTienPvk>().AsQueryable();
+    = Enumerable.Empty<ClubsTienPvk>().AsQueryable();
 
     private bool isLoading = true;
     private string? loadError;

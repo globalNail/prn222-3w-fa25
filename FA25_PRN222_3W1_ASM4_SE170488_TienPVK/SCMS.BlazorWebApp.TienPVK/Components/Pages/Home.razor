@@ -2,12 +2,116 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Home - Student Club Management System</PageTitle>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: pulse 15s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+</style>
 
 <AuthorizeView>
     <Authorized>
-        <h1>Welcome back @context.User.FindFirst("FullName")?.Value!</h1>
+        <div class="hero-section">
+            <div class="hero-content text-center">
+                <h1 class="display-4 fw-bold mb-3">Welcome back, @context.User.FindFirst("FullName")?.Value! 👋</h1>
+                <p class="lead">Student Club Management System</p>
+                <p class="mb-0">Manage your clubs, activities, and membership with ease</p>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Browse Clubs</h5>
+                        <p class="card-text text-muted">Discover and join various student clubs</p>
+                        <a href="/clubstienpvks" class="btn btn-outline-primary">View Clubs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">My Profile</h5>
+                        <p class="card-text text-muted">View and manage your profile information</p>
+                        <a href="/profile" class="btn btn-outline-primary">Go to Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Activities</h5>
+                        <p class="card-text text-muted">Stay updated with club activities</p>
+                        <a href="#" class="btn btn-outline-primary">View Activities</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </Authorized>
 </AuthorizeView>
-
-Welcome to clubs app.

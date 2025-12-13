@@ -9,56 +9,142 @@
 
 <PageTitle>Login - SCMS</PageTitle>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body p-5">
-                    <h3 class="text-center mb-4">Login to SCMS</h3>
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 0;
+    }
 
-                    @if (!string.IsNullOrEmpty(errorMessage))
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @errorMessage
-                        </div>
-                    }
+    .login-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+    }
 
-                    <EditForm Model="loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
-                        <DataAnnotationsValidator />
+    .login-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
 
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <InputText id="username" @bind-Value="loginModel.Username" class="form-control"
-                                placeholder="Enter username" />
-                            <ValidationMessage For="@(() => loginModel.Username)" />
-                        </div>
+    .login-header h3 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <InputText id="password" type="password" @bind-Value="loginModel.Password"
-                                class="form-control" placeholder="Enter password" />
-                            <ValidationMessage For="@(() => loginModel.Password)" />
-                        </div>
+    .login-body {
+        padding: 3rem;
+        background: white;
+    }
 
-                        <div class="mb-3 form-check">
-                            <InputCheckbox id="rememberMe" @bind-Value="loginModel.RememberMe"
-                                class="form-check-input" />
-                            <label class="form-check-label" for="rememberMe">
-                                Remember me
-                            </label>
-                        </div>
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" disabled="@isLoading">
-                                @if (isLoading)
-                                {
-                                    <span class="spinner-border spinner-border-sm me-2" role="status"
-                                        aria-hidden="true"></span>
-                                }
-                                Login
-                            </button>
-                        </div>
-                    </EditForm>
+    .login-btn {
+        padding: 0.75rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .login-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+    }
+
+    .input-icon input {
+        padding-left: 45px;
+    }
+</style>
+
+<div class="login-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="login-card">
+                    <div class="login-header">
+                        <i class="bi bi-shield-lock" style="font-size: 3rem;"></i>
+                        <h3 class="mt-3">Welcome Back</h3>
+                        <p class="mb-0 opacity-75">Student Club Management System</p>
+                    </div>
+                    <div class="login-body">
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                            </div>
+                        }
+
+                        <EditForm Model="loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
+                            <DataAnnotationsValidator />
+
+                            <div class="mb-4">
+                                <label for="username" class="form-label fw-semibold">Username</label>
+                                <div class="input-icon">
+                                    <i class="bi bi-person"></i>
+                                    <InputText id="username" @bind-Value="loginModel.Username" class="form-control"
+                                        placeholder="Enter your username" />
+                                </div>
+                                <ValidationMessage For="@(() => loginModel.Username)" class="text-danger" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold">Password</label>
+                                <div class="input-icon">
+                                    <i class="bi bi-lock"></i>
+                                    <InputText id="password" type="password" @bind-Value="loginModel.Password"
+                                        class="form-control" placeholder="Enter your password" />
+                                </div>
+                                <ValidationMessage For="@(() => loginModel.Password)" class="text-danger" />
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <InputCheckbox id="rememberMe" @bind-Value="loginModel.RememberMe"
+                                        class="form-check-input" />
+                                    <label class="form-check-label" for="rememberMe">
+                                        Remember me for 30 days
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary login-btn" disabled="@isLoading">
+                                    @if (isLoading)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"
+                                            aria-hidden="true"></span>
+                                        <span>Signing in...</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                                        <span>Sign In</span>
+                                    }
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
                 </div>
             </div>
         </div>

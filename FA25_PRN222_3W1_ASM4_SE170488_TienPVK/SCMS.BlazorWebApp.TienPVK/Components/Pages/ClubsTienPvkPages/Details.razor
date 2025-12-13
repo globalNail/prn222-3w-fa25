@@ -7,57 +7,210 @@
 @inject AppServiceProvider Service;
 @inject NavigationManager NavigationManager
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Club Details</PageTitle>
 
-<h1>Details</h1>
+<style>
+    .details-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px 15px 0 0;
+        margin-bottom: 0;
+    }
 
-<div>
-    <h2>ClubsTienPvk</h2>
-    <hr />
+    .details-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .detail-row {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.2s ease;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-row:hover {
+        background: #f8f9fa;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #667eea;
+    }
+
+    .action-btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+</style>
+
+<div class="container mt-4">
     @if (clubstienpvk is null)
     {
-        <p><em>Loading...</em></p>
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading club details...</p>
+        </div>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">Club Code</dt>
-            <dd class="col-sm-10">@clubstienpvk.ClubCode</dd>
-            <dt class="col-sm-2">Club Name</dt>
-            <dd class="col-sm-10">@clubstienpvk.ClubName</dd>
-            <dt class="col-sm-2">CategoryIdtienPvk</dt>
-            <dd class="col-sm-10">@clubstienpvk.CategoryIdtienPvk</dd>
-            <dt class="col-sm-2">Description</dt>
-            <dd class="col-sm-10">@clubstienpvk.Description</dd>
-            <dt class="col-sm-2">Founded Date</dt>
-            <dd class="col-sm-10">@clubstienpvk.FoundedDate</dd>
-            <dt class="col-sm-2">Email</dt>
-            <dd class="col-sm-10">@clubstienpvk.Email</dd>
-            <dt class="col-sm-2">Phone</dt>
-            <dd class="col-sm-10">@clubstienpvk.Phone</dd>
-            <dt class="col-sm-2">Address</dt>
-            <dd class="col-sm-10">@clubstienpvk.Address</dd>
-            <dt class="col-sm-2">Manager User Id</dt>
-            <dd class="col-sm-10">@clubstienpvk.ManagerUserId</dd>
-            <dt class="col-sm-2">Member Limit</dt>
-            <dd class="col-sm-10">@clubstienpvk.MemberLimit</dd>
-            <dt class="col-sm-2">Is Open To Join</dt>
-            <dd class="col-sm-10">@clubstienpvk.IsOpenToJoin</dd>
-            <dt class="col-sm-2">Requires Approval</dt>
-            <dd class="col-sm-10">@clubstienpvk.RequiresApproval</dd>
-            <dt class="col-sm-2">Status</dt>
-            <dd class="col-sm-10">@clubstienpvk.Status</dd>
-            <dt class="col-sm-2">CreatedAt</dt>
-            <dd class="col-sm-10">@clubstienpvk.CreatedAt</dd>
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@clubstienpvk.CreatedBy</dd>
-            <dt class="col-sm-2">Modified By</dt>
-            <dd class="col-sm-10">@clubstienpvk.ModifiedBy</dd>
-            <dt class="col-sm-2">Modified At</dt>
-            <dd class="col-sm-10">@clubstienpvk.ModifiedAt</dd>
-        </dl>
-        <div>
-            <a href="@($"/clubstienpvks/edit?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")">Edit</a> |
-            <a href="@($"/clubstienpvks")">Back to List</a>
+    else
+    {
+        <div class="details-card">
+            <div class="details-header">
+                <h2 class="mb-2"><i class="bi bi-info-circle"></i> Club Details</h2>
+                <h4 class="mb-0">@clubstienpvk.ClubName</h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-code-square me-2"></i>Club Code</div>
+                        <div class="col-md-9">@clubstienpvk.ClubCode</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-building me-2"></i>Club Name</div>
+                        <div class="col-md-9 fw-semibold">@clubstienpvk.ClubName</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-tag me-2"></i>Category</div>
+                        <div class="col-md-9">@clubstienpvk.Category?.CategoryName</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-file-text me-2"></i>Description</div>
+                        <div class="col-md-9">@clubstienpvk.Description</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-calendar-event me-2"></i>Founded Date</div>
+                        <div class="col-md-9">@clubstienpvk.FoundedDate.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-envelope me-2"></i>Email</div>
+                        <div class="col-md-9">@clubstienpvk.Email</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-telephone me-2"></i>Phone</div>
+                        <div class="col-md-9">@clubstienpvk.Phone</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-geo-alt me-2"></i>Address</div>
+                        <div class="col-md-9">@clubstienpvk.Address</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-person-badge me-2"></i>Manager</div>
+                        <div class="col-md-9">@clubstienpvk.ManagerUser?.FullName</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-people me-2"></i>Member Limit</div>
+                        <div class="col-md-9"><span class="badge bg-info">@clubstienpvk.MemberLimit</span></div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-door-open me-2"></i>Open to Join</div>
+                        <div class="col-md-9">
+                            @if (clubstienpvk.IsOpenToJoin)
+                            {
+                                <span class="badge bg-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-check-circle me-2"></i>Requires Approval</div>
+                        <div class="col-md-9">
+                            @if (clubstienpvk.RequiresApproval)
+                            {
+                                <span class="badge bg-warning">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">No</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-activity me-2"></i>Status</div>
+                        <div class="col-md-9"><span class="badge bg-primary">@clubstienpvk.Status</span></div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-clock-history me-2"></i>Created At</div>
+                        <div class="col-md-9">@clubstienpvk.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-person me-2"></i>Created By</div>
+                        <div class="col-md-9">@clubstienpvk.CreatedBy</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-person me-2"></i>Modified By</div>
+                        <div class="col-md-9">@clubstienpvk.ModifiedBy</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-md-3 detail-label"><i class="bi bi-clock me-2"></i>Modified At</div>
+                        <div class="col-md-9">@clubstienpvk.ModifiedAt?.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+                <div class="p-4 bg-light">
+                    <a href="@($"/clubstienpvks/edit?clubidtienpvk={clubstienpvk.ClubIdtienPvk}")"
+                        class="btn btn-edit action-btn me-2">
+                        <i class="bi bi-pencil-square me-2"></i>Edit
+                    </a>
+                    <a href="/clubstienpvks" class="btn btn-secondary action-btn">
+                        <i class="bi bi-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
         </div>
     }
 </div>
