@@ -8,6 +8,7 @@
 @using SCMS.Service.TienPVK
 @* @implements IAsyncDisposable *@
 @inject AppServiceProvider Service;
+@rendermode InteractiveServer
 
 
 <PageTitle>Clubs Management</PageTitle>
@@ -63,6 +64,32 @@
     .action-link:hover {
         color: #764ba2;
     }
+
+    .search-box {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-box input {
+        padding-left: 2.5rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .search-box .search-icon {
+        position: absolute;
+        left: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+        font-size: 1.1rem;
+    }
 </style>
 
 <div class="container-fluid">
@@ -78,8 +105,14 @@
         </div>
     </div>
 
+    <div class="search-box">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" class="form-control" placeholder="Search clubs by code, name, email, phone, or status..." 
+               @bind-value="SearchTerm" @bind-value:event="oninput" />
+    </div>
+
     <div class="modern-table">
-        <QuickGrid Class="table table-hover mb-0" Items="sessions" TGridItem="ClubsTienPvk">
+        <QuickGrid Class="table table-hover mb-0" Items="sessions" TGridItem="ClubsTienPvk" Pagination="pagination">
             <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubCode" Title="Code" />
             <PropertyColumn Property="clubstienpvk => clubstienpvk.ClubName" Title="Club Name" />
             <TemplateColumn Title="Category">
@@ -106,14 +139,25 @@
             </TemplateColumn>
         </QuickGrid>
     </div>
+
+    <div class="mt-3 d-flex justify-content-center">
+        <Paginator State="pagination" />
+    </div>
 </div>
 
 @code {
     private IQueryable<ClubsTienPvk> sessions
     = Enumerable.Empty<ClubsTienPvk>().AsQueryable();
+    
+    private List<ClubsTienPvk> allClubs = new();
 
     private bool isLoading = true;
     private string? loadError;
+    
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    
+    private string searchTerm = string.Empty;
+    private System.Threading.Timer? debounceTimer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,7 +167,54 @@
     private async Task LoadClubs()
     {
         var data = await Service.ClubService.GetAllAsync();
-        sessions = data.AsQueryable();
+        allClubs = data.ToList();
+        ApplyFilter();
+    }
+    
+    private string SearchTerm
+    {
+        get => searchTerm;
+        set
+        {
+            if (searchTerm != value)
+            {
+                searchTerm = value;
+                debounceTimer?.Dispose();
+                debounceTimer = new System.Threading.Timer(_ =>
+                {
+                    InvokeAsync(() =>
+                    {
+                        ApplyFilter();
+                        StateHasChanged();
+                    });
+                }, null, 500, System.Threading.Timeout.Infinite);
+            }
+        }
+    }
+    
+    private void ApplyFilter()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            sessions = allClubs.AsQueryable();
+        }
+        else
+        {
+            var term = searchTerm.ToLower();
+            sessions = allClubs.Where(c =>
+                (c.ClubCode != null && c.ClubCode.ToLower().Contains(term)) ||
+                (c.ClubName != null && c.ClubName.ToLower().Contains(term)) ||
+                (c.Email != null && c.Email.ToLower().Contains(term)) ||
+                (c.Phone != null && c.Phone.ToLower().Contains(term)) ||
+                (c.Status != null && c.Status.ToLower().Contains(term)) ||
+                (c.Category?.CategoryName != null && c.Category.CategoryName.ToLower().Contains(term))
+            ).AsQueryable();
+        }
+    }
+    
+    public void Dispose()
+    {
+        debounceTimer?.Dispose();
     }
 
     // public async ValueTask DisposeAsync() => await sessions.DisposeAsync();
