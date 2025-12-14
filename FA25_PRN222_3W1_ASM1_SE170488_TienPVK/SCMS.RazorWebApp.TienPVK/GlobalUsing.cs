@@ -1,3 +1,11 @@
-﻿global using Microsoft.AspNetCore.SignalR;
-global using SCMS.Service.TienPVK.Interfaces;
-global using SCMS.Service.TienPVK.Implements;
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading.Tasks;
+global using Microsoft.AspNetCore.SignalR;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.RazorPages;
+global using Microsoft.EntityFrameworkCore;
+global using SCMS.Domain.TienPVK.Models;
+global using SCMS.Repository.TienPVK.DBContext;
+global using SCMS.Service.TienPVK.Implements;global using SCMS.RazorWebApp.TienPVK.Hubs;

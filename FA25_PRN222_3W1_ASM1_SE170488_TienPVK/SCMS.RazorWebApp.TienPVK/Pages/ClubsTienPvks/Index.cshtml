@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.IndexModel
 @using System.Linq
 
@@ -7,6 +7,26 @@
 }
 
 <section class="club-page">
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle-fill me-2"></i> <span id="successMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i> <span id="errorMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    
     <div class="club-hero mb-4 p-4 p-md-5 rounded text-white">
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-4">
             <div>
@@ -24,7 +44,7 @@
     <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
         <div class="stat-chip">
             <span class="label">Total clubs</span>
-            <span class="value">@Model.ClubsTienPvk?.Count</span>
+            <span class="value">@Model.TotalItems</span>
         </div>
         <div class="stat-chip">
             <span class="label">Open to join</span>
@@ -117,12 +137,117 @@
             }
         </div>
     }
+
+    <!-- Pagination Controls -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination justify-content-center">
+                <!-- Previous Button -->
+                <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber - 1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span> Previous
+                    </a>
+                </li>
+
+                <!-- Page Numbers -->
+                @{
+                    int startPage = Math.Max(1, Model.PageNumber - 2);
+                    int endPage = Math.Min(Model.TotalPages, Model.PageNumber + 2);
+
+                    if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-page="./Index" asp-route-pageNumber="1">1</a>
+                        </li>
+                        if (startPage > 2)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+
+                    for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" asp-page="./Index" asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+
+                    if (endPage < Model.TotalPages)
+                    {
+                        if (endPage < Model.TotalPages - 1)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link" asp-page="./Index" asp-route-pageNumber="@Model.TotalPages">@Model.TotalPages</a>
+                        </li>
+                    }
+                }
+
+                <!-- Next Button -->
+                <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber + 1)" aria-label="Next">
+                        Next <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="text-center text-muted small mt-3">
+            Page @Model.PageNumber of @Model.TotalPages (@Model.TotalItems total clubs)
+        </div>
+    }
 </section>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-check-circle"></i> <span id="toastMessage"></span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
         "use strict";
+
+        function showToast(message, isSuccess = true) {
+            if (isSuccess) {
+                document.getElementById('successMessage').textContent = message;
+                var toast = new bootstrap.Toast(document.getElementById('successToast'));
+                toast.show();
+            } else {
+                document.getElementById('errorMessage').textContent = message;
+                var toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                toast.show();
+            }
+        }
+
+        // Show TempData messages on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                showToast('@TempData["ErrorMessage"]', false);
+                </text>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                showToast('@TempData["SuccessMessage"]', true);
+                </text>
+            }
+        });
 
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/clubHub")
@@ -140,6 +265,8 @@
         connection.on("DeleteClub", function (clubId)
         {
             console.log("Received DeleteClub event for ID:", clubId);
+            showToast('Club deleted successfully!', true);
+            
             // Find the card div with the matching ID and remove its parent column
             var card = document.getElementById(clubId);
 
@@ -159,6 +286,71 @@
             } else
             {
                 console.warn("Card not found with ID:", clubId);
+            }
+        });
+
+        connection.on("CreateClub", function (clubId)
+        {
+            console.log("Received CreateClub event for ID:", clubId);
+            showToast('New club created successfully!', true);
+            // Fetch and add the new club card to the page
+            fetch(`/ClubsTienPvks/Index?handler=GetClubCard&clubId=${clubId}`)
+                .then(response => response.text())
+                .then(html =>
+                {
+                    if (html && html.trim() !== '')
+                    {
+                        var clubGrid = document.querySelector('.row.row-cols-1');
+                        if (clubGrid)
+                        {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            var newCard = tempDiv.firstElementChild;
+                            if (newCard)
+                            {
+                                newCard.style.opacity = '0';
+                                clubGrid.insertBefore(newCard, clubGrid.firstChild);
+                                setTimeout(() => newCard.style.opacity = '1', 100);
+                                console.log("New club card added");
+                            }
+                        }
+                    }
+                })
+                .catch(err => console.error("Error fetching new club:", err));
+        });
+
+        connection.on("UpdateClub", function (clubId)
+        {
+            console.log("Received UpdateClub event for ID:", clubId);
+            showToast('Club updated successfully!', true);
+            
+            // Fetch and update the club card
+            var card = document.getElementById(clubId);
+            if (card)
+            {
+                fetch(`/ClubsTienPvks/Index?handler=GetClubCard&clubId=${clubId}`)
+                    .then(response => response.text())
+                    .then(html =>
+                    {
+                        if (html && html.trim() !== '')
+                        {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            var updatedCard = tempDiv.firstElementChild;
+                            if (updatedCard)
+                            {
+                                var colDiv = card.closest('.col');
+                                if (colDiv)
+                                {
+                                    colDiv.innerHTML = updatedCard.innerHTML;
+                                    colDiv.classList.add('updated-flash');
+                                    setTimeout(() => colDiv.classList.remove('updated-flash'), 1000);
+                                    console.log("Club card updated");
+                                }
+                            }
+                        }
+                    })
+                    .catch(err => console.error("Error updating club:", err));
             }
         });
     </script>
@@ -255,4 +447,16 @@
             transform: translateY(0);
         }
     }
-</style>
+
+    .updated-flash {
+        animation: flashUpdate 1s ease;
+    }
+
+    @@keyframes flashUpdate {
+        0%, 100% {
+            background-color: transparent;
+        }
+        50% {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+    }</style>

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SCMS.Domain.TienPVK.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {
@@ -10,12 +6,15 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
     {
         private readonly ClubsTienPvkService _service;
         private readonly ClubCategoriesTienPvkService _categoryService;
+        private readonly IHubContext<ClubHub> _hubContext;
 
         public EditModel(ClubsTienPvkService service,
-            ClubCategoriesTienPvkService categoryService
+            ClubCategoriesTienPvkService categoryService,
+            IHubContext<ClubHub> hubContext
         ){
             _service = service;
             _categoryService = categoryService;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -56,6 +55,9 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 
             if (!ModelState.IsValid)
             {
+                var categoryList = await _categoryService.GetAllAsync();
+                ViewData["CategoryIdtienPvk"] = new SelectList(categoryList, "CategoryIdtienPvk", "CategoryCode");
+                TempData["ErrorMessage"] = "Please fix the validation errors before submitting.";
                 return Page();
             }
 
@@ -65,23 +67,36 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 
                 if (result > 0)
                 {
+                    // Broadcast update event to all connected clients
+                    await _hubContext.Clients.All.SendAsync("UpdateClub", ClubsTienPvk.ClubIdtienPvk.ToString());
+                    TempData["SuccessMessage"] = $"Club '{ClubsTienPvk.ClubName}' updated successfully!";
                     return RedirectToPage("./Index");
-
                 }
-
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to update club. Please try again.";
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!ClubsTienPvkExists(ClubsTienPvk.ClubIdtienPvk))
                 {
+                    TempData["ErrorMessage"] = "Club not found. It may have been deleted.";
                     return NotFound();
                 }
                 else
                 {
+                    TempData["ErrorMessage"] = "A concurrency error occurred. Please try again.";
                     throw;
                 }
             }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
 
+            var categories = await _categoryService.GetAllAsync();
+            ViewData["CategoryIdtienPvk"] = new SelectList(categories, "CategoryIdtienPvk", "CategoryCode");
             return Page();
         }
 

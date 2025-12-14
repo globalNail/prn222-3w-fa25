@@ -1,10 +1,22 @@
-﻿@page
+@page
 @model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.DetailsModel
 
 @{
     ViewData["Title"] = Model.ClubsTienPvk?.ClubName ?? "Club Details";
     var club = Model.ClubsTienPvk;
 }
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div id="successToast" class="toast align-items-center text-bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-info-circle"></i> <span id="toastMessage"></span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 
 <div class="club-details-page">
     <!-- Breadcrumb -->
@@ -376,7 +388,131 @@
         display: inline-block;
         font-family: 'bootstrap-icons' !important;
     }
-</style>
+
+    .content-updated {
+        animation: contentFlash 1s ease;
+    }
+
+    @@keyframes contentFlash {
+        0%, 100% {
+            background-color: transparent;
+        }
+        50% {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+    }</style>
 
 <!-- Bootstrap Icons CDN (if not already included) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+
+        function showToast(message) {
+            document.getElementById('toastMessage').textContent = message;
+            var toast = new bootstrap.Toast(document.getElementById('successToast'));
+            toast.show();
+        }
+
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/clubHub")
+            .configureLogging(signalR.LogLevel.None)
+            .build();
+
+        connection.start().then(function ()
+        {
+            console.log("SignalR connected successfully on Details page");
+        }).catch(function (err)
+        {
+            console.error("SignalR connection error:", err.toString());
+        });
+
+        // Get the current club ID from the page
+        var currentClubId = "@Model.ClubsTienPvk?.ClubIdtienPvk";
+
+        connection.on("DeleteClub", function (clubId)
+        {
+            console.log("Received DeleteClub event for ID:", clubId);
+            // If the deleted club is the one being viewed, redirect to index
+            if (clubId === currentClubId)
+            {
+                alert("This club has been deleted.");
+                window.location.href = "/ClubsTienPvks/Index";
+            }
+        });
+
+        connection.on("UpdateClub", function (clubId)
+        {
+            console.log("Received UpdateClub event for ID:", clubId);
+            // If the updated club is the one being viewed, fetch and update the data
+            if (clubId === currentClubId)
+            {
+                console.log("Fetching updated club data...");
+                showToast('Club details updated!');
+                
+                fetch(`/ClubsTienPvks/Details/${clubId}?handler=GetClubData`)
+                    .then(response => response.json())
+                    .then(data =>
+                    {
+                        if (data)
+                        {
+                            // Update the page content with new data
+                            updateClubDetails(data);
+                            // Add a visual indicator that data was updated
+                            document.body.classList.add('content-updated');
+                            setTimeout(() => document.body.classList.remove('content-updated'), 1000);
+                            console.log("Club details updated successfully");
+                        }
+                    })
+                    .catch(err =>
+                    {
+                        console.error("Error fetching updated club data:", err);
+                        // Fallback to reload if fetch fails
+                        location.reload();
+                    });
+            }
+        });
+
+        function updateClubDetails(club)
+        {
+            // Helper function to safely update text content
+            function updateText(selector, value)
+            {
+                const elem = document.querySelector(selector);
+                if (elem) elem.textContent = value || '—';
+            }
+
+            // Update all the club details on the page
+            if (club.clubName) document.querySelector('h1.display-5')?.textContent = club.clubName;
+            updateText('.text-muted .bi-hash', club.clubCode);
+            updateText('.lead.text-secondary', club.description);
+            
+            // Update contact info
+            const emailLink = document.querySelector('a[href^="mailto:"]');
+            if (emailLink && club.email)
+            {
+                emailLink.href = `mailto:${club.email}`;
+                emailLink.textContent = club.email;
+            }
+            
+            const phoneLink = document.querySelector('a[href^="tel:"]');
+            if (phoneLink && club.phone)
+            {
+                phoneLink.href = `tel:${club.phone}`;
+                phoneLink.textContent = club.phone;
+            }
+
+            // Update other fields dynamically
+            updateText('.info-value', club.address);
+            
+            console.log("All club details updated");
+        }
+
+        connection.on("CreateClub", function (clubId)
+        {
+            console.log("Received CreateClub event for ID:", clubId);
+            // No action needed on details page for new clubs
+        });
+    </script>
+}

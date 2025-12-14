@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.CreateModel
 
 @{
@@ -6,6 +6,26 @@
 }
 
 <div class="create-club-page">
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle-fill me-2"></i> <span id="successMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i> <span id="errorMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-page="./Index">Clubs</a></li>
@@ -241,45 +261,106 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
 
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script>
-    "use strict";
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/clubHub")
+            .configureLogging(signalR.LogLevel.None)
+            .build();
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/zPaymentHub").build();
+        connection.start()
+            .then(() => console.log("SignalR connected on Create page"))
+            .catch(err => console.error("SignalR connection error:", err));
 
-    connection.start()
-        .then(() => console.log("Connected to the SignalR Hub"))
-        .catch(err => console.error(err.toString()));
+        function showToast(message, isSuccess = true) {
+            if (isSuccess) {
+                document.getElementById('successMessage').textContent = message;
+                var toast = new bootstrap.Toast(document.getElementById('successToast'));
+                toast.show();
+            } else {
+                document.getElementById('errorMessage').textContent = message;
+                var toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                toast.show();
+            }
+        }
 
-    document.getElementById("btnCreateSignal").addEventListener("click", function (event)
-    {
-        // Handle confirm create button in modal
-        document.getElementById("confirmCreate").addEventListener("click", function ()
-        {
-            const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+        // Show TempData messages on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                showToast('@TempData["ErrorMessage"]', false);
+                </text>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                showToast('@TempData["SuccessMessage"]', true);
+                </text>
+            }
 
-            var dataObj = JSON.stringify({
-                CashDepositSlipId: document.getElementById("TransactionCashDepositSlip_CashDepositSlipId").value,
-                Code: document.getElementById("TransactionCashDepositSlip_Code").value,
-                CashDepositDate: document.getElementById("TransactionCashDepositSlip_CashDepositDate").value,
-                DepositorName: document.getElementById("TransactionCashDepositSlip_DepositorName").value,
-                Address: document.getElementById("TransactionCashDepositSlip_Address").value,
-                AccountNo: document.getElementById("TransactionCashDepositSlip_AccountNo").value,
-                AccountName: document.getElementById("TransactionCashDepositSlip_AccountName").value,
-            });
+            // Handle SignalR create button in modal
+            document.getElementById('confirmCreate').addEventListener('click', function() {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+                
+                // Get form data
+                const form = document.querySelector('form');
+                const formData = new FormData(form);
+                
+                // Validate required fields
+                const clubCode = formData.get('ClubsTienPvk.ClubCode');
+                const clubName = formData.get('ClubsTienPvk.ClubName');
+                const categoryId = formData.get('ClubsTienPvk.CategoryIdtienPvk');
+                const foundedDate = formData.get('ClubsTienPvk.FoundedDate');
+                const memberLimit = formData.get('ClubsTienPvk.MemberLimit');
+                const status = formData.get('ClubsTienPvk.Status');
 
-            connection.invoke("HubCreate_TransactionCashDepositSlip", dataObj)
-                //     .catch(err => console.error(err.toString()));
-
-                // event.preventDefault();
-                .then(() =>
-                {
-                    console.log("Create successful");
+                if (!clubCode || !clubName || !categoryId || !foundedDate || !memberLimit || !status) {
                     modal.hide();
-                })
-                .catch(err => console.error(err.toString()));
+                    showToast('Please fill in all required fields before creating via SignalR.', false);
+                    return;
+                }
+
+                // Create club object from form data (matching C# property names exactly)
+                const clubData = {
+                    ClubCode: clubCode,
+                    ClubName: clubName,
+                    CategoryIdtienPvk: parseInt(categoryId),
+                    FoundedDate: foundedDate,
+                    Description: formData.get('ClubsTienPvk.Description') || null,
+                    Email: formData.get('ClubsTienPvk.Email') || null,
+                    Phone: formData.get('ClubsTienPvk.Phone') || null,
+                    Address: formData.get('ClubsTienPvk.Address') || null,
+                    ManagerUserId: null,
+                    MemberLimit: parseInt(memberLimit),
+                    Status: status,
+                    IsOpenToJoin: document.getElementById('isOpenToJoin').checked,
+                    RequiresApproval: document.getElementById('requiresApproval').checked
+                };
+
+                console.log('Sending club data:', clubData);
+
+                connection.invoke('SendCreateClub', clubData)
+                    .then(() => {
+                        console.log('Create broadcast successful');
+                        modal.hide();
+                        showToast('Club created successfully via SignalR!', true);
+                        setTimeout(() => window.location.href = '/ClubsTienPvks/Index', 1500);
+                    })
+                    .catch(err => {
+                        console.error('Create failed:', err);
+                        modal.hide();
+                        showToast('Failed to create: ' + err.message || err, false);
+                    });
+            });
         });
 
-</script>
+        // Listen for create events from other clients
+        connection.on("CreateClub", function (clubId) {
+            console.log("Received CreateClub event for ID:", clubId);
+            showToast('New club created!', true);
+        });
+    </script>
+}

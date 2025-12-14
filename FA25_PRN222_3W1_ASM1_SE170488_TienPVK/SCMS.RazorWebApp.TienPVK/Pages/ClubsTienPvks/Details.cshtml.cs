@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using SCMS.Domain.TienPVK.Models;
-using SCMS.Service.TienPVK.Implements;
-
-namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
+﻿namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {
     public class DetailsModel : PageModel
     {
@@ -34,6 +28,33 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
                 ClubsTienPvk = clubstienpvk;
             }
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetGetClubDataAsync(int id)
+        {
+            var club = await _service.GetByIdAsync(id);
+            if (club == null)
+                return NotFound();
+
+            var data = new
+            {
+                clubId = club.ClubIdtienPvk,
+                clubCode = club.ClubCode,
+                clubName = club.ClubName,
+                description = club.Description,
+                email = club.Email,
+                phone = club.Phone,
+                address = club.Address,
+                memberLimit = club.MemberLimit,
+                status = club.Status,
+                isOpenToJoin = club.IsOpenToJoin,
+                requiresApproval = club.RequiresApproval,
+                foundedDate = club.FoundedDate.ToString("dd MMM yyyy"),
+                categoryCode = club.Category?.CategoryCode,
+                managerEmail = club.ManagerUser?.Email
+            };
+
+            return new JsonResult(data);
         }
     }
 }

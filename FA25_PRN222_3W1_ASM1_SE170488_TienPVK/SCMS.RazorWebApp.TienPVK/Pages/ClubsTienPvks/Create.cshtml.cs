@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using SCMS.Domain.TienPVK.Models;
-using SCMS.Repository.TienPVK.DBContext;
-using SCMS.Service.TienPVK.Implements;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {
@@ -15,11 +6,13 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
     {
         private readonly ClubsTienPvkService _clubService;
         private readonly ClubCategoriesTienPvkService _categoryService;
+        private readonly IHubContext<ClubHub> _hubContext;
 
-        public CreateModel(ClubsTienPvkService clubService, ClubCategoriesTienPvkService categoryService)
+        public CreateModel(ClubsTienPvkService clubService, ClubCategoriesTienPvkService categoryService, IHubContext<ClubHub> hubContext)
         {
             _clubService = clubService;
             _categoryService = categoryService;
+            _hubContext = hubContext;
         }
 
         public async Task<IActionResult> OnGet()
@@ -68,13 +61,28 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
             {
                 var category = await _categoryService.GetAllAsync();
                 ViewData["CategoryIdtienPvk"] = new SelectList(category, "CategoryIdtienPvk", "CategoryCode");
+                TempData["ErrorMessage"] = "Please fix the validation errors before submitting.";
                 return Page();
             }
 
-            var result = await _clubService.CreateAsync(ClubsTienPvk);
-            if (result > 0)
+            try
             {
-                return RedirectToPage("./Index");
+                var result = await _clubService.CreateAsync(ClubsTienPvk);
+                if (result > 0)
+                {
+                    // Broadcast create event to all connected clients
+                    await _hubContext.Clients.All.SendAsync("CreateClub", result.ToString());
+                    TempData["SuccessMessage"] = $"Club '{ClubsTienPvk.ClubName}' created successfully!";
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to create club. Please try again.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
             }
 
             var categoryList = await _categoryService.GetAllAsync();

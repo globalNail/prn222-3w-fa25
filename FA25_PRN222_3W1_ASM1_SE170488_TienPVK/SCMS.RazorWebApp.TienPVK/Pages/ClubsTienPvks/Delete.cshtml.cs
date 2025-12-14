@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using SCMS.Domain.TienPVK.Models;
-using SCMS.Repository.TienPVK.DBContext;
-using SCMS.Service.TienPVK.Implements;
-
-namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
+﻿namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
 {
     public class DeleteModel : PageModel
     {
@@ -47,14 +36,35 @@ namespace SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks
         {
             if (id == null)
             {
+                TempData["ErrorMessage"] = "Invalid club ID.";
                 return NotFound();
             }
 
-            var clubstienpvk = await _service.DeleteAsync(id.Value);
-
-            if (clubstienpvk)
+            try
             {
-                return RedirectToPage("./Index");
+                var club = await _service.GetByIdAsync(id.Value);
+                if (club == null)
+                {
+                    TempData["ErrorMessage"] = "Club not found.";
+                    return NotFound();
+                }
+
+                var clubName = club.ClubName;
+                var result = await _service.DeleteAsync(id.Value);
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = $"Club '{clubName}' deleted successfully!";
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to delete club. Please try again.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
             }
 
             return Page();

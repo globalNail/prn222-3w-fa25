@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SCMS.RazorWebApp.TienPVK.Hubs;
-using SCMS.Repository.TienPVK.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
 

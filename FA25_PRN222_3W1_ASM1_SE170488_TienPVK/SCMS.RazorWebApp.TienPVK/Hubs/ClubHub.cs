@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using SCMS.Service.TienPVK.Implements;
-
-namespace SCMS.RazorWebApp.TienPVK.Hubs;
+﻿namespace SCMS.RazorWebApp.TienPVK.Hubs;
 
 public class ClubHub : Hub
 {
@@ -24,28 +21,37 @@ public class ClubHub : Hub
         }
     }
 
-    public async Task SendCreateClub(string clubId)
+    public async Task SendCreateClub(ClubsTienPvk club)
     {
-        // Delete the club from database
-        var result = await _service.DeleteAsync(Int32.Parse(clubId));
-
-        if (result)
+        // Validate required fields
+        if (string.IsNullOrEmpty(club.ClubCode) || string.IsNullOrEmpty(club.ClubName) || 
+            club.CategoryIdtienPvk == 0 || string.IsNullOrEmpty(club.Status))
         {
-            // Broadcast to all connected clients after successful deletion
-            await Clients.All.SendAsync("CreateClub", clubId);
+            throw new HubException("Required fields are missing");
+        }
+
+        // Set system-generated values
+        club.CreatedAt = DateTime.Now;
+        club.IsDeleted = false;
+
+        // Create the club in database
+        var result = await _service.CreateAsync(club);
+
+        if (result > 0)
+        {
+            // Broadcast to all connected clients about the new club
+            await Clients.All.SendAsync("CreateClub", result.ToString());
+        }
+        else
+        {
+            throw new HubException("Failed to create club in database");
         }
     }
 
     public async Task SendUpdateClub(string clubId)
     {
-        // Delete the club from database
-        var result = await _service.DeleteAsync(Int32.Parse(clubId));
-
-        if (result)
-        {
-            // Broadcast to all connected clients after successful deletion
-            await Clients.All.SendAsync("UpdateClub", clubId);
-        }
+        // Broadcast to all connected clients about the updated club
+        await Clients.All.SendAsync("UpdateClub", clubId);
     }
 
 }

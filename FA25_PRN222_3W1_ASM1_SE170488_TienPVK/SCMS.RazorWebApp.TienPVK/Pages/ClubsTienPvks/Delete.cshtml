@@ -2,188 +2,249 @@
 @model SCMS.RazorWebApp.TienPVK.Pages.ClubsTienPvks.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Club";
+    var club = Model.ClubsTienPvk;
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>ClubsTienPvk</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.ClubCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.ClubCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.ClubName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.ClubName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.FoundedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.FoundedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.Phone)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.Phone)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.Address)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.MemberLimit)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.MemberLimit)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.IsOpenToJoin)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.IsOpenToJoin)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.RequiresApproval)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.RequiresApproval)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.CreatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.CreatedBy)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.CreatedBy)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.ModifiedBy)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.ModifiedBy)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.ModifiedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.ModifiedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.IsDeleted)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.IsDeleted)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.Category)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.Category.CategoryCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubsTienPvk.ManagerUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ClubsTienPvk.ManagerUser.Email)
-        </dd>
-    </dl>
-
-    <form method="post">
-        <input type="hidden" asp-for="ClubsTienPvk.ClubIdtienPvk" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <input type="button" id="btnHubDelete" value="Delete by SignalR" class="btn btn-danger" data-bs-toggle="modal"
-            data-bs-target="#deleteModal" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
-</div>
-
-<!-- Bootstrap Modal for Delete Confirmation -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Confirm Delete
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this club via SignalR?</p>
-                <p class="text-danger fw-bold">This action cannot be undone.</p>
-                <div class="alert alert-warning">
-                    <strong>Club:</strong> @Model.ClubsTienPvk.ClubName<br />
-                    <strong>Code:</strong> @Model.ClubsTienPvk.ClubCode
+<div class="delete-club-page">
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle-fill me-2"></i> <span id="successMessage"></span>
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+        </div>
+        <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i> <span id="errorMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Clubs</a></li>
+            <li class="breadcrumb-item"><a asp-page="./Details" asp-route-id="@club.ClubIdtienPvk">@club.ClubName</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Warning Card -->
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-header bg-danger text-white border-0 py-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-wrapper me-3">
+                            <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                        </div>
+                        <div>
+                            <h3 class="mb-1 fw-bold">Delete Club</h3>
+                            <p class="mb-0 opacity-90">This action cannot be undone</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body p-4">
+                    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Warning:</strong> You are about to permanently delete this club. All related data will be removed.
+                    </div>
+
+                    <!-- Club Information -->
+                    <div class="club-info-section">
+                        <h5 class="text-muted text-uppercase small fw-bold mb-3">Club Details</h5>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Club Name</label>
+                                    <p class="mb-0 fw-semibold fs-5">@club.ClubName</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Club Code</label>
+                                    <p class="mb-0 fw-semibold">@club.ClubCode</p>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Description</label>
+                                    <p class="mb-0">@(club.Description ?? "No description")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Category</label>
+                                    <p class="mb-0">
+                                        <span class="badge bg-primary">@(club.Category?.CategoryCode ?? "N/A")</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Status</label>
+                                    <p class="mb-0">
+                                        <span class="badge bg-@(club.Status == "Active" ? "success" : "secondary")">@club.Status</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Member Limit</label>
+                                    <p class="mb-0 fw-semibold">@club.MemberLimit</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Email</label>
+                                    <p class="mb-0">@(club.Email ?? "—")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <label class="text-muted small mb-1">Phone</label>
+                                    <p class="mb-0">@(club.Phone ?? "—")</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0 p-4">
+                    <form method="post" id="deleteForm">
+                        <input type="hidden" asp-for="ClubsTienPvk.ClubIdtienPvk" />
+                        <div class="d-flex gap-3 flex-wrap">
+                            <button type="button" class="btn btn-danger btn-lg px-4" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                <i class="bi bi-trash-fill me-2"></i> Delete Club
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-lg px-4" id="btnHubDelete">
+                                <i class="bi bi-broadcast me-2"></i> Delete via SignalR
+                            </button>
+                            <a asp-page="./Index" class="btn btn-outline-secondary btn-lg px-4 ms-auto">
+                                <i class="bi bi-x-circle me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Confirmation Modal -->
+                    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="confirmDeleteModalLabel">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirm Deletion
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="mb-3">Are you sure you want to permanently delete <strong>@club.ClubName</strong>?</p>
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="bi bi-exclamation-circle me-2"></i>
+                                        <strong>Warning:</strong> This action cannot be undone. All related data will be removed.
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle me-2"></i> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                                        <i class="bi bi-trash-fill me-2"></i> Yes, Delete Club
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap Modal for Delete Confirmation -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Confirm Delete
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-check-circle"></i> <span id="toastMessage">Club deleted successfully!</span>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this club via SignalR?</p>
-                <p class="text-danger fw-bold">This action cannot be undone.</p>
-                <div class="alert alert-warning">
-                    <strong>Club:</strong> @Model.ClubsTienPvk.ClubName<br />
-                    <strong>Code:</strong> @Model.ClubsTienPvk.ClubCode
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
-            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
 </div>
+
+<style>
+    .delete-club-page {
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item a {
+        text-decoration: none;
+        color: #0d6efd;
+    }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+    }
+
+    .info-card {
+        transition: all 0.2s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .info-card label {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .btn {
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script>
@@ -191,14 +252,49 @@
 
     var connection = new signalR.HubConnectionBuilder()
         .withUrl("/clubHub")
-        .configureLogging(signalR.LogLevel.None) // Off logging; change to Information for debugging
+        .configureLogging(signalR.LogLevel.None)
         .build();
 
-    connection.on("DeleteClub", (clubId) =>
+    function showToast(message, isSuccess = true) {
+        if (isSuccess) {
+            document.getElementById('successMessage').textContent = message;
+            var toast = new bootstrap.Toast(document.getElementById('successToast'));
+            toast.show();
+        } else {
+            document.getElementById('errorMessage').textContent = message;
+            var toast = new bootstrap.Toast(document.getElementById('errorToast'));
+            toast.show();
+        }
+    }
+
+    // Show TempData messages on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+            showToast('@TempData["ErrorMessage"]', false);
+            </text>
+        }
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+            showToast('@TempData["SuccessMessage"]', true);
+            </text>
+        }
+
+        // Confirm delete button handler
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal'));
+            modal.hide();
+            document.getElementById('deleteForm').submit();
+        });
+    });
+
+    connection.on("DeleteClub", function (clubId)
     {
         console.log("Club deleted successfully, redirecting...");
-        // Redirect to Index page after receiving confirmation
-        window.location.href = "/ClubsTienPvks/Index";
+        showToast('Club deleted successfully!', true);
+        setTimeout(() => window.location.href = "/ClubsTienPvks/Index", 1500);
     });
 
     connection.start()
@@ -208,33 +304,21 @@
         })    
         .catch(err => console.error("error on start:" + err.toString()));
 
-    // document.getElementById("btnHubDelete").addEventListener("click", function (event)
-    // {
-    //     var obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
-    //     connection.invoke("DeleteClub", obj).then(function ()
-    //     {
-    //         console.log("Delete successful, redirecting...");
-    //     }).catch(function (err)
-    //     {
-    //         console.error("Action fail:", err.toString());
-    //     });
-    //     event.preventDefault();
-    // });
-
-    // Handle confirm delete button in modal
-    document.getElementById("confirmDelete").addEventListener("click", () =>
+    // Handle SignalR delete button
+    document.getElementById("btnHubDelete").addEventListener("click", function (event)
     {
-        const obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
-        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-
-        connection.invoke("SendDeleteClub", obj)
-            // .then(() => console.log("Delete successful"))
-            .then(() =>
-            {
-                console.log("Delete successful");
-                modal.hide();
-            })
-            .catch(err => console.error("Action fail:", err));
+        if (confirm('Are you sure you want to delete this club via SignalR?')) {
+            var obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
+            connection.invoke("SendDeleteClub", obj)
+                .then(() => {
+                    console.log("Delete successful");
+                })
+                .catch(err => {
+                    console.error("Action fail:", err);
+                    showToast('Failed to delete: ' + err, false);
+                });
+        }
+        event.preventDefault();
     });
 
 </script>
