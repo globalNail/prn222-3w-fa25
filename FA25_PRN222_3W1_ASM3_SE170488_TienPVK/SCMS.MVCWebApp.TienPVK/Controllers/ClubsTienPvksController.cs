@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SCMS.Domain.TienPVK.Models;
 using SCMS.Service.TienPVK.Implements;
 
@@ -65,21 +66,87 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ClubsTienPvk model)
         {
+            // Remove model state for navigation properties
+            ModelState.Remove("Category");
+            ModelState.Remove("ManagerUser");
+            
             if (!ModelState.IsValid)
             {
                 await LoadClubCategory(model);
                 return View(model);
             }
 
-            var newId = await _mainService.CreateAsync(model);
-            if (newId <= 0)
+            try
             {
-                ModelState.AddModelError(string.Empty, "Không thể tạo phiên điểm danh. Vui lòng thử lại.");
+                // Set default values
+                model.CreatedAt = DateTime.Now;
+                model.CreatedBy = User.Identity?.Name ?? "system";
+                model.IsDeleted = false;
+                
+                // Clear navigation properties to avoid EF tracking issues
+                model.Category = null;
+                model.ManagerUser = null;
+                // Initialize collections to avoid null reference issues
+                model.Activities = new List<Activity>();
+                model.AttendanceSessions = new List<AttendanceSession>();
+                model.ClubFeePolicies = new List<ClubFeePolicy>();
+                model.DisciplinaryCases = new List<DisciplinaryCase>();
+                model.FeeInvoices = new List<FeeInvoice>();
+                model.JoinRequests = new List<JoinRequest>();
+
+                var newId = await _mainService.CreateAsync(model);
+                if (newId <= 0)
+                {
+                    TempData["ErrorMessage"] = "Failed to create club. Please try again.";
+                    await LoadClubCategory(model);
+                    return View(model);
+                }
+
+                TempData["SuccessMessage"] = "Club created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                // Check for unique constraint violation
+                var innerException = ex.InnerException?.Message ?? ex.Message;
+                
+                if (innerException.Contains("UNIQUE KEY") || innerException.Contains("duplicate key"))
+                {
+                    if (innerException.Contains(model.ClubCode))
+                    {
+                        TempData["ErrorMessage"] = $"Club code '{model.ClubCode}' already exists. Please use a different code.";
+                        ModelState.AddModelError("ClubCode", "This club code already exists.");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "A club with this information already exists. Please check your input.";
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Database error occurred. Please try again.";
+                }
+                
                 await LoadClubCategory(model);
                 return View(model);
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                // Get the innermost exception message
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+                
+                TempData["ErrorMessage"] = $"Error: {innerException.Message}";
+                await LoadClubCategory(model);
+                return View(model);
+            }
+            finally
+            {
+                ModelState.Clear();
+            }
         }
 
         // GET: ClubTienPVKController/Edit/5
@@ -101,25 +168,43 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
         {
             if (id != model.ClubIdtienPvk) return BadRequest();
 
+            // Remove model state for navigation properties
+            ModelState.Remove("Category");
+            ModelState.Remove("ManagerUser");
+            
             if (!ModelState.IsValid)
             {
                 await LoadClubCategory(model);
                 return View(model);
             }
 
-            // Set modified fields
-            model.ModifiedAt = DateTime.Now;
-            model.ModifiedBy = User.Identity?.Name ?? "system";
-
-            var rows = await _mainService.UpdateAsync(model);
-            if (rows <= 0)
+            try
             {
-                ModelState.AddModelError(string.Empty, "Cập nhật không thành công. Vui lòng thử lại.");
+                // Set modified fields
+                model.ModifiedAt = DateTime.Now;
+                model.ModifiedBy = User.Identity?.Name ?? "system";
+                
+                // Clear navigation properties to avoid EF tracking issues
+                model.Category = null;
+                model.ManagerUser = null;
+
+                var rows = await _mainService.UpdateAsync(model);
+                if (rows <= 0)
+                {
+                    TempData["ErrorMessage"] = "Failed to update club. Please try again.";
+                    await LoadClubCategory(model);
+                    return View(model);
+                }
+
+                TempData["SuccessMessage"] = "Club updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error: {ex.Message}";
                 await LoadClubCategory(model);
                 return View(model);
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
         // GET: ClubTienPVKController/Delete/5
@@ -134,9 +219,9 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
         }
 
         // POST: ClubTienPVKController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var obj = await _mainService.GetByIdAsync(id);
             if (obj == null) return NotFound();
@@ -144,10 +229,11 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
             var result = await _mainService.DeleteAsync(id);
             if (!result)
             {
-                TempData["Error"] = "Xóa không thành công. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "Failed to delete club. Please try again.";
                 return RedirectToAction(nameof(Delete), new { id });
             }
 
+            TempData["SuccessMessage"] = "Club deleted successfully!";
             return RedirectToAction(nameof(Index));
         }
 

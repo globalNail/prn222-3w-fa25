@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SCMS.Domain.TienPVK.Models;
+﻿using SCMS.Domain.TienPVK.Models;
 using SCMS.Repository.TienPVK.DBContext;
 
 

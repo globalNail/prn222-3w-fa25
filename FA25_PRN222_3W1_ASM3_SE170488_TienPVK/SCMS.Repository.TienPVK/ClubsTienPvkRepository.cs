@@ -16,7 +16,9 @@ public class ClubsTienPvkRepository : GenericRepository<ClubsTienPvk>
         .Include(c => c.Category)
         .Include(c => c.ManagerUser)
         .Where(c => !c.IsDeleted)
-        .OrderByDescending(c => c.CreatedAt)
+        .OrderByDescending(c => c!.ModifiedAt.HasValue
+                                ? c.ModifiedAt.Value
+                                : c.CreatedAt)
         .AsNoTracking()
         .ToListAsync();
 
