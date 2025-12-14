@@ -1,126 +1,240 @@
 ﻿@model SCMS.Domain.TienPVK.Models.ClubsTienPvk
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Club Details";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="bi bi-info-circle"></i> Club Details
+                        </h4>
+                        <div>
+                            @if (Model.Status == "Active")
+                            {
+                                <span class="badge bg-success">@Model.Status</span>
+                            }
+                            else if (Model.Status == "Inactive")
+                            {
+                                <span class="badge bg-secondary">@Model.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">@Model.Status</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Left Column: Basic Information -->
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-building"></i> Basic Information
+                            </h5>
 
-<div>
-    <h4>ClubsTienPvk</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClubCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClubName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FoundedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FoundedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemberLimit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemberLimit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsOpenToJoin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsOpenToJoin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RequiresApproval)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RequiresApproval)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDeleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CategoryCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ManagerUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ManagerUser.Email)
-        </dd>
-    </dl>
+                            <dl class="row">
+                                <dt class="col-sm-5">Club Code:</dt>
+                                <dd class="col-sm-7">
+                                    <strong class="text-primary">@Model.ClubCode</strong>
+                                </dd>
+
+                                <dt class="col-sm-5">Club Name:</dt>
+                                <dd class="col-sm-7">
+                                    <strong>@Model.ClubName</strong>
+                                </dd>
+
+                                <dt class="col-sm-5">Category:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-info">@Model.Category?.CategoryName</span>
+                                </dd>
+
+                                <dt class="col-sm-5">Founded Date:</dt>
+                                <dd class="col-sm-7">
+                                    @Model.FoundedDate.ToString("MMMM dd, yyyy")
+                                </dd>
+
+                                <dt class="col-sm-5">Member Limit:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-secondary">@Model.MemberLimit members</span>
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <!-- Right Column: Contact & Settings -->
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-envelope"></i> Contact Information
+                            </h5>
+
+                            <dl class="row">
+                                <dt class="col-sm-5">Email:</dt>
+                                <dd class="col-sm-7">
+                                    @if (!string.IsNullOrEmpty(Model.Email))
+                                    {
+                                        <a href="mailto:@Model.Email">@Model.Email</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Not provided</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5">Phone:</dt>
+                                <dd class="col-sm-7">
+                                    @if (!string.IsNullOrEmpty(Model.Phone))
+                                    {
+                                        @Model.Phone
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Not provided</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5">Address:</dt>
+                                <dd class="col-sm-7">
+                                    @if (!string.IsNullOrEmpty(Model.Address))
+                                    {
+                                        @Model.Address
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Not provided</span>
+                                    }
+                                </dd>
+                            </dl>
+
+                            <h5 class="border-bottom pb-2 mb-3 mt-4">
+                                <i class="bi bi-gear"></i> Settings
+                            </h5>
+
+                            <dl class="row">
+                                <dt class="col-sm-5">Open to Join:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.IsOpenToJoin)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Yes
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i> No
+                                        </span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5">Requires Approval:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.RequiresApproval)
+                                    {
+                                        <span class="badge bg-warning">
+                                            <i class="bi bi-shield-check"></i> Yes
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-shield"></i> No
+                                        </span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <!-- Description Section -->
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2 mb-3">
+                                    <i class="bi bi-card-text"></i> Description
+                                </h5>
+                                <p class="text-muted">@Model.Description</p>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Metadata Section -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="bg-light p-3 rounded">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-clock-history"></i> Metadata
+                                </h6>
+                                <div class="row small text-muted">
+                                    <div class="col-md-6">
+                                        <strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                        @if (!string.IsNullOrEmpty(Model.CreatedBy))
+                                        {
+                                            <span> by @Model.CreatedBy</span>
+                                        }
+                                    </div>
+                                    @if (Model.ModifiedAt.HasValue)
+                                    {
+                                        <div class="col-md-6">
+                                            <strong>Last Modified:</strong> @Model.ModifiedAt.Value.ToString("MMM dd, yyyy HH:mm")
+                                            @if (!string.IsNullOrEmpty(Model.ModifiedBy))
+                                            {
+                                                <span> by @Model.ModifiedBy</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.ClubIdtienPvk" class="btn btn-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.ClubIdtienPvk" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ClubIdtienPvk">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Styles {
+    <style>
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        dl {
+            margin-bottom: 0;
+        }
+
+        dt {
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        dd {
+            margin-bottom: 0.75rem;
+        }
+
+        .bg-light {
+            background-color: #f8f9fa !important;
+        }
+    </style>
+}

@@ -1,137 +1,224 @@
 ﻿@model IEnumerable<SCMS.Domain.TienPVK.Models.ClubsTienPvk>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clubs Management";
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h3 mb-0">Clubs Management</h1>
+            <p class="text-muted">Manage and organize all clubs</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Club
+            </a>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ClubCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClubName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FoundedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MemberLimit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsOpenToJoin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RequiresApproval)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ManagerUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClubCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClubName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FoundedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberLimit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsOpenToJoin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequiresApproval)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ManagerUser.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ClubIdtienPvk">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ClubIdtienPvk">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ClubIdtienPvk">Delete</a>
-            </td>
-        </tr>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Club Name</th>
+                            <th>Category</th>
+                            <th>Founded Date</th>
+                            <th>Status</th>
+                            <th>Member Limit</th>
+                            <th class="text-center">Open to Join</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@Html.DisplayFor(modelItem => item.ClubCode)</strong>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ClubName)
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@Html.DisplayFor(modelItem =>
+                                                                                item.Category.CategoryName)</span>
+                            </td>
+                            <td>
+                                @item.FoundedDate.ToString("MMM dd, yyyy")
+                            </td>
+                            <td>
+                                @if (item.Status == "Active")
+                                        {
+                                            <span class="badge bg-success">@item.Status</span>
+                                        }
+                                        else if (item.Status == "Inactive")
+                                        {
+                                            <span class="badge bg-secondary">@item.Status</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">@item.Status</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MemberLimit)
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.IsOpenToJoin)
+                                        {
+                                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Yes</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger"><i class="bi bi-x-circle"></i> No</span>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.ClubIdtienPvk"
+                                                class="btn btn-sm btn-outline-info" title="View Details">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.ClubIdtienPvk"
+                                                class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.ClubIdtienPvk"
+                                                class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                                    <p class="mt-2">No clubs found. Create your first club to get started!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @* Pagination *@
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav aria-label="Page navigation" class="mt-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-0">
+                                Showing @((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) to
+                                @(Math.Min(ViewBag.CurrentPage * ViewBag.PageSize, ViewBag.TotalItems)) of
+                                @ViewBag.TotalItems clubs
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="pagination justify-content-end mb-0">
+                                @* Previous Button *@
+                                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" asp-action="Index"
+                                        asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                                        asp-route-pageSize="@ViewBag.PageSize">
+                                        <i class="bi bi-chevron-left"></i> Previous
+                                    </a>
+                                </li>
+
+                                @* Page Numbers *@
+                                @{
+                                    int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+                                    int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+                                }
+
+                                @if (startPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="Index" asp-route-pageNumber="1"
+                                            asp-route-pageSize="@ViewBag.PageSize">1</a>
+                                    </li>
+                                    @if (startPage > 2)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+                                }
+
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
+                                            asp-route-pageSize="@ViewBag.PageSize">@i</a>
+                                    </li>
+                                }
+
+                                @if (endPage < ViewBag.TotalPages)
+                                {
+                                    @if (endPage < ViewBag.TotalPages - 1)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@ViewBag.TotalPages"
+                                            asp-route-pageSize="@ViewBag.PageSize">@ViewBag.TotalPages</a>
+                                    </li>
+                                }
+
+                                @* Next Button *@
+                                <li class="page-item @(ViewBag.CurrentPage >= ViewBag.TotalPages ? "disabled" : "")">
+                                    <a class="page-link" asp-action="Index"
+                                        asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                                        asp-route-pageSize="@ViewBag.PageSize">
+                                        Next <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-group .btn {
+            padding: 0.25rem 0.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .pagination .page-link {
+            border-radius: 0.25rem;
+            margin: 0 0.125rem;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
 }
-    </tbody>
-</table>

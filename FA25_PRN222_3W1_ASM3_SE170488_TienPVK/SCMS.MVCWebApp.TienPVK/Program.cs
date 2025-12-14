@@ -1,4 +1,3 @@
-using SCMS.Repository.TienPVK.Implements;
 using SCMS.Service.TienPVK.Implements;
 
 var builder = WebApplication.CreateBuilder(args);

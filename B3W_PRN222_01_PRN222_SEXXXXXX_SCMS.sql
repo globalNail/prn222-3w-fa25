@@ -552,6 +552,37 @@ VALUES
     ('CLB_MUSIC', N'Music Club', 2, N'Activities for music lovers', '2019-03-15', 'music@uni.edu', '0902223333', N'Room B201', 2),
     ('CLB_TECH', N'Tech & Coding Club', 3, N'Programming, AI, IoT', '2020-01-10', 'tech@uni.edu', '0903334444', N'Lab C105', 1);
 
+INSERT INTO dbo.ClubsTienPVK
+    (ClubCode, ClubName, CategoryIDTienPVK, Description, FoundedDate, Email, Phone, Address, ManagerUserId, MemberLimit, IsOpenToJoin, RequiresApproval, Status, CreatedBy)
+VALUES
+    -- Sports (CategoryID=1)
+    ('CLB_BASKETBALL', N'Basketball Club', 1, N'Weekly basketball training & friendly matches', '2017-10-12', 'basketball@uni.edu', '0904441001', N'Court D1', 2, 120, 1, 1, N'Active', N'seed'),
+    ('CLB_BADMINTON', N'Badminton Club', 1, N'Badminton practice for all levels', '2018-04-22', 'badminton@uni.edu', '0904441002', N'Gym E2', 2, 150, 1, 0, N'Active', N'seed'),
+    ('CLB_MARATHON', N'Running & Marathon Club', 1, N'Endurance training and race prep', '2019-08-03', 'running@uni.edu', '0904441003', N'Track A', 2, 200, 1, 0, N'Active', N'seed'),
+    ('CLB_YOGA', N'Yoga & Wellness Club', 1, N'Yoga sessions and mindfulness', '2020-02-18', 'yoga@uni.edu', '0904441004', N'Room W101', 2, 80, 1, 1, N'Active', N'seed'),
+    ('CLB_SWIMMING', N'Swimming Club', 1, N'Swimming techniques & safety', '2016-06-05', 'swimming@uni.edu', '0904441005', N'Pool P1', 2, 100, 1, 1, N'Active', N'seed'),
+
+    -- Art & Music (CategoryID=2)
+    ('CLB_GUITAR', N'Guitar Club', 2, N'Acoustic & electric guitar practice', '2018-11-20', 'guitar@uni.edu', '0904442001', N'Room B202', 2, 60, 1, 1, N'Active', N'seed'),
+    ('CLB_DANCE', N'Dance Crew', 2, N'Hip-hop / K-pop choreography sessions', '2019-05-09', 'dance@uni.edu', '0904442002', N'Hall H2', 2, 90, 1, 1, N'Active', N'seed'),
+    ('CLB_PHOTO', N'Photography Club', 2, N'Photo walks & editing workshops', '2017-03-14', 'photo@uni.edu', '0904442003', N'Studio S3', 2, 70, 1, 0, N'Active', N'seed'),
+    ('CLB_THEATER', N'Theater Club', 2, N'Acting practice and stage performances', '2016-09-01', 'theater@uni.edu', '0904442004', N'Room A301', 2, 50, 1, 1, N'Active', N'seed'),
+    ('CLB_DESIGN', N'Graphic Design Club', 2, N'Branding, posters, UI/UX mini projects', '2021-01-15', 'design@uni.edu', '0904442005', N'Lab D204', 2, 75, 1, 1, N'Active', N'seed'),
+
+    -- Technology (CategoryID=3)
+    ('CLB_ROBOTICS', N'Robotics Club', 3, N'Robotics builds, Arduino/ESP32, competitions', '2018-02-02', 'robotics@uni.edu', '0904443001', N'Lab C210', 1, 60, 1, 1, N'Active', N'seed'),
+    ('CLB_CYBERSEC', N'Cybersecurity Club', 3, N'CTF practice and security seminars', '2019-09-19', 'cyber@uni.edu', '0904443002', N'Lab C302', 1, 80, 1, 1, N'Active', N'seed'),
+    ('CLB_DATASCI', N'Data Science Club', 3, N'Data analytics, Python, ML study group', '2020-10-08', 'datasci@uni.edu', '0904443003', N'Lab C105', 1, 100, 1, 0, N'Active', N'seed'),
+    ('CLB_GAMDEV', N'Game Development Club', 3, N'Unity/Unreal game jams & teamwork', '2017-12-12', 'gamedev@uni.edu', '0904443004', N'Lab G101', 1, 90, 1, 1, N'Active', N'seed'),
+    ('CLB_IOT', N'IoT Makers Club', 3, N'IoT devices, sensors, smart home projects', '2021-06-22', 'iot@uni.edu', '0904443005', N'Lab M110', 1, 70, 1, 1, N'Active', N'seed'),
+
+    -- Volunteer (CategoryID=4)
+    ('CLB_GREEN', N'Green Volunteer Club', 4, N'Environment cleanups & recycling drives', '2016-04-30', 'green@uni.edu', '0904444001', N'Office V1', 2, 200, 1, 0, N'Active', N'seed'),
+    ('CLB_BLOOD', N'Blood Donation Club', 4, N'Blood donation campaigns & coordination', '2017-07-07', 'blood@uni.edu', '0904444002', N'Office V2', 2, 150, 1, 1, N'Active', N'seed'),
+    ('CLB_TUTORING', N'Tutoring & Mentoring Club', 4, N'Peer tutoring & mentoring juniors', '2018-08-25', 'tutoring@uni.edu', '0904444003', N'Room L102', 2, 120, 1, 1, N'Active', N'seed'),
+    ('CLB_COMMUNITY', N'Community Service Club', 4, N'Charity events and local outreach', '2019-11-11', 'community@uni.edu', '0904444004', N'Office V3', 2, 180, 1, 0, N'Active', N'seed'),
+    ('CLB_FIRSTAID', N'First Aid & Safety Club', 4, N'First-aid training and safety support', '2020-03-03', 'firstaid@uni.edu', '0904444005', N'Room S101', 2, 90, 1, 1, N'Active', N'seed');
+
 ---------------------------------------------------------
 -- CLUB FEE POLICIES
 ---------------------------------------------------------

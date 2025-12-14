@@ -19,9 +19,28 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
 
 
         // GET: ClubTienPVKController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
-            var items = await _mainService.GetAllAsync();
+            var allItems = await _mainService.GetAllAsync();
+
+            // Calculate pagination
+            var totalItems = allItems.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            // Ensure page number is valid
+            pageNumber = Math.Max(1, Math.Min(pageNumber, totalPages > 0 ? totalPages : 1));
+
+            var items = allItems
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Pass pagination data to view
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+
             return View(items);
         }
 
@@ -37,7 +56,7 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
         // GET: ClubTienPVKController/Create
         public async Task<IActionResult> Create()
         {
-            //await LoadClubCategory();
+            await LoadClubCategory(null);
             return View();
         }
 
@@ -88,6 +107,10 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
                 return View(model);
             }
 
+            // Set modified fields
+            model.ModifiedAt = DateTime.Now;
+            model.ModifiedBy = User.Identity?.Name ?? "system";
+
             var rows = await _mainService.UpdateAsync(model);
             if (rows <= 0)
             {
@@ -137,6 +160,6 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
                 "CategoryIdtienPvk",
                 "CategoryName",
                 clubCategory?.CategoryIdtienPvk);
-        } 
+        }
     }
 }

@@ -1,96 +1,186 @@
 ﻿@model SCMS.Domain.TienPVK.Models.ClubsTienPvk
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create New Club";
 }
 
-<h1>Create</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-plus-circle"></i> Create New Club
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>ClubsTienPvk</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ClubCode" class="control-label"></label>
-                <input asp-for="ClubCode" class="form-control" />
-                <span asp-validation-for="ClubCode" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="ClubCode" class="form-label fw-bold">Club Code <span
+                                            class="text-danger">*</span></label>
+                                    <input asp-for="ClubCode" class="form-control" placeholder="e.g., CLUB001" />
+                                    <span asp-validation-for="ClubCode" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="ClubName" class="form-label fw-bold">Club Name <span
+                                            class="text-danger">*</span></label>
+                                    <input asp-for="ClubName" class="form-control" placeholder="Enter club name" />
+                                    <span asp-validation-for="ClubName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="CategoryIdtienPvk" class="form-label fw-bold">Category <span
+                                            class="text-danger">*</span></label>
+                                    <select asp-for="CategoryIdtienPvk" class="form-select"
+                                        asp-items="ViewBag.CategoryIdtienPvk">
+                                        <option value="">-- Select Category --</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryIdtienPvk" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="FoundedDate" class="form-label fw-bold">Founded Date <span
+                                            class="text-danger">*</span></label>
+                                    <input asp-for="FoundedDate" type="date" class="form-control" />
+                                    <span asp-validation-for="FoundedDate" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"
+                                placeholder="Brief description of the club"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label fw-bold">Contact Email</label>
+                                    <input asp-for="Email" type="email" class="form-control"
+                                        placeholder="club@example.com" />
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Phone" class="form-label fw-bold">Contact Phone</label>
+                                    <input asp-for="Phone" class="form-control" placeholder="+1234567890" />
+                                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label fw-bold">Address</label>
+                            <input asp-for="Address" class="form-control" placeholder="Club location" />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="MemberLimit" class="form-label fw-bold">Member Limit <span
+                                            class="text-danger">*</span></label>
+                                    <input asp-for="MemberLimit" type="number" class="form-control" min="1"
+                                        placeholder="50" />
+                                    <span asp-validation-for="MemberLimit" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Status" class="form-label fw-bold">Status <span
+                                            class="text-danger">*</span></label>
+                                    <select asp-for="Status" class="form-select">
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                        <option value="Pending">Pending</option>
+                                    </select>
+                                    <span asp-validation-for="Status" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" asp-for="IsOpenToJoin" />
+                                    <label class="form-check-label fw-bold" asp-for="IsOpenToJoin">
+                                        Open to Join
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" asp-for="RequiresApproval" />
+                                    <label class="form-check-label fw-bold" asp-for="RequiresApproval">
+                                        Requires Approval
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Create Club
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ClubName" class="control-label"></label>
-                <input asp-for="ClubName" class="form-control" />
-                <span asp-validation-for="ClubName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryIdtienPvk" class="control-label"></label>
-                <select asp-for="CategoryIdtienPvk" class ="form-control" asp-items="ViewBag.CategoryIdtienPvk"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FoundedDate" class="control-label"></label>
-                <input asp-for="FoundedDate" class="form-control" />
-                <span asp-validation-for="FoundedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ManagerUserId" class="control-label"></label>
-                <select asp-for="ManagerUserId" class ="form-control" asp-items="ViewBag.ManagerUserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="MemberLimit" class="control-label"></label>
-                <input asp-for="MemberLimit" class="form-control" />
-                <span asp-validation-for="MemberLimit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            @* <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedAt" class="control-label"></label>
-                <input asp-for="ModifiedAt" class="form-control" />
-                <span asp-validation-for="ModifiedAt" class="text-danger"></span>
-            </div> *@
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@section Styles {
+    <style>
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .form-label {
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 0.375rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+    </style>
 }
