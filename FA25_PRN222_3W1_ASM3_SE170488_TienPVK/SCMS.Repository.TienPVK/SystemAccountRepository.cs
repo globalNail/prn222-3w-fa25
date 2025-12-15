@@ -17,6 +17,6 @@ public class SystemAccountRepository : GenericRepository<SystemAccount>
     public async Task<SystemAccount> GetAccountAsync(string username, string password)
     {
         return await _context.SystemAccounts
-            .FirstOrDefaultAsync(sa => sa.UserName == username && sa.Password == password && sa.IsActive);
+            .FirstOrDefaultAsync(sa => (sa.UserName == username || sa.Email == username) && sa.Password == password && sa.IsActive);
     }
 }

@@ -37,4 +37,32 @@ public class ClubsTienPvkRepository : GenericRepository<ClubsTienPvk>
         }
         return false;
     }
+
+    public async Task<List<ClubsTienPvk>> SearchAsync(string clubCode, string clubName, string status)
+    {
+        var query = _context.ClubsTienPvks
+            .Include(c => c.Category)
+            .Include(c => c.ManagerUser)
+            .Where(c => !c.IsDeleted)
+            .AsQueryable();
+
+        // Apply search filters (OR operator - any match returns results)
+        var hasAnyFilter = !string.IsNullOrWhiteSpace(clubCode) || 
+                          !string.IsNullOrWhiteSpace(clubName) || 
+                          !string.IsNullOrWhiteSpace(status);
+
+        if (hasAnyFilter)
+        {
+            query = query.Where(c =>
+                (!string.IsNullOrWhiteSpace(clubCode) && c.ClubCode != null && c.ClubCode.ToLower().Contains(clubCode.ToLower())) ||
+                (!string.IsNullOrWhiteSpace(clubName) && c.ClubName != null && c.ClubName.ToLower().Contains(clubName.ToLower())) ||
+                (!string.IsNullOrWhiteSpace(status) && c.Status != null && c.Status.ToLower().Contains(status.ToLower()))
+            );
+        }
+
+        return await query
+            .OrderByDescending(c => c!.ModifiedAt.HasValue ? c.ModifiedAt.Value : c.CreatedAt)
+            .AsNoTracking()
+            .ToListAsync();
+    }
 }

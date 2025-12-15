@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SCMS.Domain.TienPVK.Models;
 using SCMS.Service.TienPVK.Implements;
 
 namespace SCMS.MVCWebApp.TienPVK.Controllers
 {
+    [Authorize]
     public class ClubsTienPvksController : Controller
     {
         private readonly ClubsTienPvkService _mainService;
@@ -20,9 +22,15 @@ namespace SCMS.MVCWebApp.TienPVK.Controllers
 
 
         // GET: ClubTienPVKController
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string clubCode, string clubName, string status, int pageNumber = 1, int pageSize = 10)
         {
-            var allItems = await _mainService.GetAllAsync();
+            // Use search service method
+            var allItems = await _mainService.SearchAsync(clubCode, clubName, status);
+
+            // Pass search parameters to view
+            ViewBag.ClubCode = clubCode;
+            ViewBag.ClubName = clubName;
+            ViewBag.Status = status;
 
             // Calculate pagination
             var totalItems = allItems.Count();
