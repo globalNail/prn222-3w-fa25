@@ -43,4 +43,7 @@ public class ClubsTienPvkService : IClubsTienPvkService
             throw new Exception($"Error deleting club with id {id}: {ex.Message}");
         }
     }
+
+    public async Task<List<ClubsTienPvk>> SearchAsync(string clubCode, string clubName, string status)
+        => await _repository.SearchAsync(clubCode, clubName, status);
 }

@@ -12,12 +12,27 @@
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchClubCode { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? SearchClubName { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? SearchStatus { get; set; }
+
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
 
         public async Task OnGetAsync()
         {
-            var allClubs = await _service.GetAllAsync();
+            // Use search if any search parameter is provided, otherwise get all
+            var allClubs = !string.IsNullOrWhiteSpace(SearchClubCode) || 
+                          !string.IsNullOrWhiteSpace(SearchClubName) || 
+                          !string.IsNullOrWhiteSpace(SearchStatus)
+                ? await _service.SearchAsync(SearchClubCode ?? "", SearchClubName ?? "", SearchStatus ?? "")
+                : await _service.GetAllAsync();
+
             TotalItems = allClubs.Count;
             TotalPages = (TotalItems + PageSize - 1) / PageSize;
 

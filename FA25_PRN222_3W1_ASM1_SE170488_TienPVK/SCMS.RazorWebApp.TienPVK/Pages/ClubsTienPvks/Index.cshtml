@@ -41,6 +41,41 @@
         </div>
     </div>
 
+    <!-- Search Form -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="searchClubCode" class="form-label">Club Code</label>
+                    <input type="text" class="form-control" id="searchClubCode" name="SearchClubCode" 
+                           value="@Model.SearchClubCode" placeholder="Search by code...">
+                </div>
+                <div class="col-md-4">
+                    <label for="searchClubName" class="form-label">Club Name</label>
+                    <input type="text" class="form-control" id="searchClubName" name="SearchClubName" 
+                           value="@Model.SearchClubName" placeholder="Search by name...">
+                </div>
+                <div class="col-md-3">
+                    <label for="searchStatus" class="form-label">Status</label>
+                    <select class="form-select" id="searchStatus" name="SearchStatus">
+                        <option value="">All Statuses</option>
+                        <option value="Active" selected="@(Model.SearchStatus == "Active")">Active</option>
+                        <option value="Inactive" selected="@(Model.SearchStatus == "Inactive")">Inactive</option>
+                        <option value="Pending" selected="@(Model.SearchStatus == "Pending")">Pending</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
         <div class="stat-chip">
             <span class="label">Total clubs</span>

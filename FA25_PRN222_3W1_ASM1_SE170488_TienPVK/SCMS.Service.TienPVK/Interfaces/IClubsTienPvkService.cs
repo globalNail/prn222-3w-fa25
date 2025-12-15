@@ -10,4 +10,5 @@ public interface IClubsTienPvkService
 
     Task<int> UpdateAsync(ClubsTienPvk club);
     Task<bool> DeleteAsync(int id);
+    Task<List<ClubsTienPvk>> SearchAsync(string clubCode, string clubName, string status);
 }
