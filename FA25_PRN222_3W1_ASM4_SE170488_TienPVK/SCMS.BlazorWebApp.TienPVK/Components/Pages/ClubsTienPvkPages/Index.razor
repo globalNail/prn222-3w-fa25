@@ -66,29 +66,28 @@
     }
 
     .search-box {
-        position: relative;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
         margin-bottom: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-box .form-label {
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.5rem;
     }
 
     .search-box input {
-        padding-left: 2.5rem;
         border: 2px solid #e0e0e0;
-        border-radius: 10px;
+        border-radius: 8px;
         transition: all 0.3s ease;
     }
 
     .search-box input:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-
-    .search-box .search-icon {
-        position: absolute;
-        left: 0.8rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #667eea;
-        font-size: 1.1rem;
     }
 </style>
 
@@ -106,9 +105,23 @@
     </div>
 
     <div class="search-box">
-        <i class="bi bi-search search-icon"></i>
-        <input type="text" class="form-control" placeholder="Search clubs by code, name, email, phone, or status..." 
-               @bind-value="SearchTerm" @bind-value:event="oninput" />
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="searchCode" class="form-label"><i class="bi bi-hash me-1"></i>Club Code</label>
+                <input type="text" id="searchCode" class="form-control" placeholder="Enter club code..." 
+                       @bind-value="SearchClubCode" @bind-value:event="oninput" />
+            </div>
+            <div class="col-md-4">
+                <label for="searchName" class="form-label"><i class="bi bi-tag me-1"></i>Club Name</label>
+                <input type="text" id="searchName" class="form-control" placeholder="Enter club name..." 
+                       @bind-value="SearchClubName" @bind-value:event="oninput" />
+            </div>
+            <div class="col-md-4">
+                <label for="searchStatus" class="form-label"><i class="bi bi-check-circle me-1"></i>Status</label>
+                <input type="text" id="searchStatus" class="form-control" placeholder="Enter status..." 
+                       @bind-value="SearchStatus" @bind-value:event="oninput" />
+            </div>
+        </div>
     </div>
 
     <div class="modern-table">
@@ -148,15 +161,15 @@
 @code {
     private IQueryable<ClubsTienPvk> sessions
     = Enumerable.Empty<ClubsTienPvk>().AsQueryable();
-    
-    private List<ClubsTienPvk> allClubs = new();
 
     private bool isLoading = true;
     private string? loadError;
     
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     
-    private string searchTerm = string.Empty;
+    private string searchClubCode = string.Empty;
+    private string searchClubName = string.Empty;
+    private string searchStatus = string.Empty;
     private System.Threading.Timer? debounceTimer;
 
     protected override async Task OnInitializedAsync()
@@ -166,50 +179,65 @@
 
     private async Task LoadClubs()
     {
-        var data = await Service.ClubService.GetAllAsync();
-        allClubs = data.ToList();
-        ApplyFilter();
+        await PerformSearch();
     }
     
-    private string SearchTerm
+    private string SearchClubCode
     {
-        get => searchTerm;
+        get => searchClubCode;
         set
         {
-            if (searchTerm != value)
+            if (searchClubCode != value)
             {
-                searchTerm = value;
-                debounceTimer?.Dispose();
-                debounceTimer = new System.Threading.Timer(_ =>
-                {
-                    InvokeAsync(() =>
-                    {
-                        ApplyFilter();
-                        StateHasChanged();
-                    });
-                }, null, 500, System.Threading.Timeout.Infinite);
+                searchClubCode = value;
+                TriggerSearch();
             }
         }
     }
     
-    private void ApplyFilter()
+    private string SearchClubName
     {
-        if (string.IsNullOrWhiteSpace(searchTerm))
+        get => searchClubName;
+        set
         {
-            sessions = allClubs.AsQueryable();
+            if (searchClubName != value)
+            {
+                searchClubName = value;
+                TriggerSearch();
+            }
         }
-        else
+    }
+    
+    private string SearchStatus
+    {
+        get => searchStatus;
+        set
         {
-            var term = searchTerm.ToLower();
-            sessions = allClubs.Where(c =>
-                (c.ClubCode != null && c.ClubCode.ToLower().Contains(term)) ||
-                (c.ClubName != null && c.ClubName.ToLower().Contains(term)) ||
-                (c.Email != null && c.Email.ToLower().Contains(term)) ||
-                (c.Phone != null && c.Phone.ToLower().Contains(term)) ||
-                (c.Status != null && c.Status.ToLower().Contains(term)) ||
-                (c.Category?.CategoryName != null && c.Category.CategoryName.ToLower().Contains(term))
-            ).AsQueryable();
+            if (searchStatus != value)
+            {
+                searchStatus = value;
+                TriggerSearch();
+            }
         }
+    }
+    
+    private void TriggerSearch()
+    {
+        debounceTimer?.Dispose();
+        debounceTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(async () =>
+            {
+                await PerformSearch();
+                StateHasChanged();
+            });
+        }, null, 500, System.Threading.Timeout.Infinite);
+    }
+    
+    private async Task PerformSearch()
+    {
+        var data = await Service.ClubService.SearchAsync(searchClubCode, searchClubName, searchStatus);
+        sessions = data.AsQueryable();
     }
     
     public void Dispose()
