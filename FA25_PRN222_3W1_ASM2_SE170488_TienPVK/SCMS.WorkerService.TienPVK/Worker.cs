@@ -31,6 +31,7 @@ namespace SCMS.WorkerService.TienPVK
         private readonly ClubsTienPvkService _service;
         private readonly ExcelExportService _excelService;
         private readonly EmailService _emailService;
+        private DateTime _lastEmailSentDate;
 
         public Worker(
             ILogger<Worker> logger,
@@ -43,30 +44,20 @@ namespace SCMS.WorkerService.TienPVK
             _service = service;
             _excelService = excelService;
             _emailService = emailService;
+            _lastEmailSentDate = DateTime.MinValue;
         }
 
         // doc data entity chinh cua minh, log file, export excel, send email
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //while (!stoppingToken.IsCancellationRequested)
-            //{
-            //    if (_logger.IsEnabled(LogLevel.Information))
-            //    {
-            //        _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //    }
-            //    await Task.Delay(1000, stoppingToken);
-            //}
-
-            // Validate email configuration on startup
             _emailService.ValidateConfiguration();
+            _logger.LogInformation("Worker service started. Logging every 3 seconds, email reports sent daily.");
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                await this.ProcessDataAsync(stoppingToken);
-
-                // Run daily at midnight (24 hours)
-                await Task.Delay(1000 * 60 * 60 * 24, stoppingToken);
+                await ProcessDataAsync(stoppingToken);
+                await Task.Delay(3000, stoppingToken);
             }
         }
 
@@ -74,86 +65,64 @@ namespace SCMS.WorkerService.TienPVK
         {
             try
             {
-                _logger.LogInformation("Starting data processing at: {time}", DateTime.Now);
-
                 var items = await _service.GetAllAsync();
+                string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
                 if (items == null || items.Count == 0)
                 {
-                    _logger.LogWarning("No data found to process");
-                    await WriteEmptyLogAsync();
+                    await WriteLogAsync("No data available", timestamp);
                     return;
                 }
 
-                string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                await WriteLogAsync(items, timestamp);
 
-                // 1. Write JSON log file
-                await WriteLogFileAsync(items, timestamp, stoppingToken);
-
-                // 2. Export to Excel
-                string excelFilePath = await ExportToExcelAsync(items, timestamp);
-
-                // 3. Send email with Excel attachment
-                if (!string.IsNullOrEmpty(excelFilePath) && File.Exists(excelFilePath))
+                if (_lastEmailSentDate.Date < DateTime.Now.Date)
                 {
-                    await SendReportEmailAsync(excelFilePath, items.Count);
+                    string excelFilePath = await ExportToExcelAsync(items, timestamp);
+                    if (!string.IsNullOrEmpty(excelFilePath))
+                    {
+                        await SendReportEmailAsync(excelFilePath, items.Count);
+                        _lastEmailSentDate = DateTime.Now;
+                    }
                 }
-
-                _logger.LogInformation("Data processing completed successfully at: {time}", DateTime.Now);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during data processing");
+                _logger.LogError(ex, "Error processing data");
             }
         }
 
-        private async Task WriteEmptyLogAsync()
+        private async Task WriteLogAsync(object data, string timestamp)
         {
-            string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            string fileName = $"worker_log_{timestamp}.txt";
-            var logFilePath = PathHelper.NewFolderPath(
-                folderName: "Club Worker",
-                subFolderName: "logs",
-                fileName: fileName);
-
-            using (var writer = File.Open(logFilePath, FileMode.Append, FileAccess.Write))
+            try
             {
-                using (var streamWriter = new StreamWriter(writer))
+                string content = data is string str ? str : JsonSerializer.Serialize(data, new JsonSerializerOptions
                 {
-                    await streamWriter.WriteLineAsync($"{DateTime.Now}: Data is Empty");
-                    await writer.FlushAsync();
-                }
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    WriteIndented = true
+                });
+
+                string fileName = $"worker_log_{timestamp}.txt";
+                string logFilePath = PathHelper.NewFolderPath("Vu419", "logs", fileName);
+
+                EnsureDirectoryExists(logFilePath);
+
+                await File.WriteAllTextAsync(logFilePath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]\n{content}\n");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to write log file");
             }
         }
 
-        private async Task WriteLogFileAsync(List<SCMS.Domain.TienPVK.Models.ClubsTienPvk> items, string timestamp, CancellationToken stoppingToken)
+        private void EnsureDirectoryExists(string filePath)
         {
-            var jsonOption = new JsonSerializerOptions()
+            var directory = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            };
-
-            var content = JsonSerializer.Serialize(items, jsonOption);
-            string fileName = $"worker_log_{timestamp}.txt";
-            var logFilePath = PathHelper.NewFolderPath(
-                folderName: "Club Worker",
-                subFolderName: "logs",
-                fileName: fileName
-                );
-
-            _logger.LogInformation("Writing JSON log file: {logFilePath}", logFilePath);
-
-            using (var writer = File.Open(logFilePath, FileMode.Append, FileAccess.Write))
-            {
-                using (var streamWriter = new StreamWriter(writer))
-                {
-                    await streamWriter.WriteLineAsync($"{DateTime.Now}: {content}");
-                    await writer.FlushAsync();
-                }
+                Directory.CreateDirectory(directory);
             }
-
-            _logger.LogInformation("JSON log file written successfully");
         }
 
         private async Task<string> ExportToExcelAsync(List<SCMS.Domain.TienPVK.Models.ClubsTienPvk> items, string timestamp)
@@ -161,29 +130,16 @@ namespace SCMS.WorkerService.TienPVK
             try
             {
                 string fileName = $"clubs_report_{timestamp}.xlsx";
-                var excelFilePath = PathHelper.NewFolderPath(
-                    folderName: "Club Worker",
-                    subFolderName: "excel_reports",
-                    fileName: fileName);
+                string excelFilePath = PathHelper.NewFolderPath("Vu419", "excel_reports", fileName);
 
-                _logger.LogInformation("Exporting data to Excel: {excelFilePath}", excelFilePath);
+                EnsureDirectoryExists(excelFilePath);
 
                 bool success = await _excelService.ExportClubsToExcelAsync(items, excelFilePath);
-
-                if (success)
-                {
-                    _logger.LogInformation("Excel export completed successfully");
-                    return excelFilePath;
-                }
-                else
-                {
-                    _logger.LogError("Excel export failed");
-                    return string.Empty;
-                }
+                return success ? excelFilePath : string.Empty;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error exporting to Excel");
+                _logger.LogError(ex, "Excel export failed");
                 return string.Empty;
             }
         }
@@ -192,25 +148,15 @@ namespace SCMS.WorkerService.TienPVK
         {
             try
             {
-                _logger.LogInformation("Sending report email with attachment: {excelFilePath}", excelFilePath);
-
-                bool success = await _emailService.SendReportEmailAsync(
-                    excelFilePath,
-                    "Clubs Data Report",
-                    recordCount);
-
+                bool success = await _emailService.SendReportEmailAsync(excelFilePath, "Clubs Data Report", recordCount);
                 if (success)
                 {
-                    _logger.LogInformation("Report email sent successfully");
-                }
-                else
-                {
-                    _logger.LogError("Failed to send report email");
+                    _logger.LogInformation("Daily email report sent with {count} records", recordCount);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error sending report email");
+                _logger.LogError(ex, "Email send failed");
             }
         }
     }

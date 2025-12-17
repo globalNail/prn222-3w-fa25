@@ -48,10 +48,30 @@ public class ClubHub : Hub
         }
     }
 
-    public async Task SendUpdateClub(string clubId)
+    public async Task SendUpdateClub(ClubsTienPvk club)
     {
-        // Broadcast to all connected clients about the updated club
-        await Clients.All.SendAsync("UpdateClub", clubId);
+        // Validate required fields
+        if (string.IsNullOrEmpty(club.ClubCode) || string.IsNullOrEmpty(club.ClubName) || 
+            club.CategoryIdtienPvk == 0 || string.IsNullOrEmpty(club.Status))
+        {
+            throw new HubException("Required fields are missing");
+        }
+
+        // Set the modified timestamp
+        club.ModifiedAt = DateTime.Now;
+
+        // Update the club in database
+        var result = await _service.UpdateAsync(club);
+
+        if (result > 0)
+        {
+            // Broadcast to all connected clients about the updated club
+            await Clients.All.SendAsync("UpdateClub", club.ClubIdtienPvk.ToString());
+        }
+        else
+        {
+            throw new HubException("Failed to update club in database");
+        }
     }
 
 }

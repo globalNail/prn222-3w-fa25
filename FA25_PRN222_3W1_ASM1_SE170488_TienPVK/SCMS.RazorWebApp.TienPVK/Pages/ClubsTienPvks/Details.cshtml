@@ -18,6 +18,31 @@
     </div>
 </div>
 
+<!-- Delete Notification Modal -->
+<div class="modal fade" id="deleteNotificationModal" tabindex="-1" aria-labelledby="deleteNotificationModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title" id="deleteNotificationModalLabel">
+                    <i class="bi bi-trash-fill me-2"></i> Club Deleted
+                </h5>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="mb-3">This club has been deleted</h5>
+                <p class="text-muted mb-0">The club you are viewing has been removed from the system.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <a href="/ClubsTienPvks/Index" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-list-ul me-2"></i> Go to Club List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="club-details-page">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
@@ -417,7 +442,7 @@
 
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/clubHub")
-            .configureLogging(signalR.LogLevel.None)
+            .configureLogging(signalR.LogLevel.Information)
             .build();
 
         connection.start().then(function ()
@@ -434,79 +459,183 @@
         connection.on("DeleteClub", function (clubId)
         {
             console.log("Received DeleteClub event for ID:", clubId);
-            // If the deleted club is the one being viewed, redirect to index
-            if (clubId === currentClubId)
+            console.log("Comparing with current club ID:", currentClubId);
+            // If the deleted club is the one being viewed, clear view and show modal
+            if (clubId.toString() === currentClubId.toString())
             {
-                alert("This club has been deleted.");
-                window.location.href = "/ClubsTienPvks/Index";
+                console.log("This club was deleted!");
+                
+                // First, empty/fade out the main content
+                const mainContent = document.querySelector('.club-details-page');
+                if (mainContent) {
+                    mainContent.style.transition = 'opacity 0.3s ease-out';
+                    mainContent.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        // Clear the content
+                        const detailHeader = document.querySelector('.detail-header');
+                        const mainGrid = document.querySelector('.row.g-4');
+                        
+                        if (detailHeader) detailHeader.innerHTML = '';
+                        if (mainGrid) mainGrid.innerHTML = '';
+                        
+                        // Add a centered message
+                        mainContent.innerHTML = `
+                            <div class="text-center py-5">
+                                <i class="bi bi-trash-fill text-danger" style="font-size: 5rem; opacity: 0.3;"></i>
+                                <h3 class="text-muted mt-3">Club Deleted</h3>
+                            </div>
+                        `;
+                        mainContent.style.opacity = '1';
+                        
+                        // Then show the delete notification modal
+                        const deleteModal = new bootstrap.Modal(document.getElementById('deleteNotificationModal'));
+                        deleteModal.show();
+                    }, 300);
+                }
+                
+                // Disable all action buttons on the page
+                document.querySelectorAll('.btn-primary, .btn-outline-secondary').forEach(btn => {
+                    if (btn.tagName === 'A' && !btn.getAttribute('href').includes('Index')) {
+                        btn.classList.add('disabled');
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.5';
+                    }
+                });
             }
         });
 
         connection.on("UpdateClub", function (clubId)
         {
-            console.log("Received UpdateClub event for ID:", clubId);
+            console.log("Received UpdateClub event for ID:", clubId, "Type:", typeof clubId);
+            console.log("Current club ID:", currentClubId, "Type:", typeof currentClubId);
+            
             // If the updated club is the one being viewed, fetch and update the data
-            if (clubId === currentClubId)
+            // Convert both to strings for comparison to avoid type mismatch
+            if (clubId.toString() === currentClubId.toString())
             {
-                console.log("Fetching updated club data...");
-                showToast('Club details updated!');
+                console.log("Match! Fetching updated club data...");
+                showToast('🔄 This club was just updated! Refreshing data...');
                 
-                fetch(`/ClubsTienPvks/Details/${clubId}?handler=GetClubData`)
-                    .then(response => response.json())
+                fetch(`?handler=GetClubData&id=${clubId}`)
+                    .then(response => {
+                        console.log("Fetch response status:", response.status);
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch updated data: ' + response.status);
+                        }
+                        return response.json();
+                    })
                     .then(data =>
                     {
+                        console.log("Received data:", data);
                         if (data)
                         {
                             // Update the page content with new data
                             updateClubDetails(data);
                             // Add a visual indicator that data was updated
                             document.body.classList.add('content-updated');
-                            setTimeout(() => document.body.classList.remove('content-updated'), 1000);
+                            setTimeout(() => {
+                                document.body.classList.remove('content-updated');
+                                showToast('✅ Club details updated successfully!');
+                            }, 500);
                             console.log("Club details updated successfully");
                         }
                     })
                     .catch(err =>
                     {
                         console.error("Error fetching updated club data:", err);
-                        // Fallback to reload if fetch fails
-                        location.reload();
+                        showToast('⚠️ Failed to fetch updated data: ' + err.message);
                     });
+            }
+            else
+            {
+                console.log("No match - this update is for a different club");
             }
         });
 
         function updateClubDetails(club)
         {
-            // Helper function to safely update text content
-            function updateText(selector, value)
-            {
-                const elem = document.querySelector(selector);
-                if (elem) elem.textContent = value || '—';
-            }
-
-            // Update all the club details on the page
-            if (club.clubName) document.querySelector('h1.display-5')?.textContent = club.clubName;
-            updateText('.text-muted .bi-hash', club.clubCode);
-            updateText('.lead.text-secondary', club.description);
+            console.log("Updating club details with data:", club);
             
-            // Update contact info
-            const emailLink = document.querySelector('a[href^="mailto:"]');
-            if (emailLink && club.email)
-            {
-                emailLink.href = `mailto:${club.email}`;
-                emailLink.textContent = club.email;
+            // Update page title
+            if (club.clubName) {
+                document.title = club.clubName;
+                const titleElem = document.querySelector('h1.display-5');
+                if (titleElem) titleElem.textContent = club.clubName;
             }
             
-            const phoneLink = document.querySelector('a[href^="tel:"]');
-            if (phoneLink && club.phone)
-            {
-                phoneLink.href = `tel:${club.phone}`;
-                phoneLink.textContent = club.phone;
+            // Update club code
+            const clubCodeElem = document.querySelector('.text-muted .bi-hash');
+            if (clubCodeElem && clubCodeElem.parentNode) {
+                clubCodeElem.parentNode.innerHTML = `<i class="bi bi-hash"></i> ${club.clubCode || ''}`;
             }
-
-            // Update other fields dynamically
-            updateText('.info-value', club.address);
             
-            console.log("All club details updated");
+            // Update description
+            const descElem = document.querySelector('.lead.text-secondary');
+            if (descElem) descElem.textContent = club.description || 'No description available.';
+            
+            // Update status badge
+            const statusBadge = document.querySelector('.status-badge');
+            if (statusBadge && club.status) {
+                statusBadge.textContent = club.status;
+                statusBadge.className = 'status-badge status-' + club.status.toLowerCase();
+            }
+            
+            // Update category badge
+            const categoryBadge = document.querySelector('.badge.bg-primary');
+            if (categoryBadge && club.categoryCode) {
+                categoryBadge.textContent = club.categoryCode;
+            }
+            
+            // Update email
+            const emailElem = document.querySelector('a[href^="mailto:"]');
+            if (club.email) {
+                if (emailElem) {
+                    emailElem.href = `mailto:${club.email}`;
+                    emailElem.textContent = club.email;
+                } else {
+                    // Find email container and update
+                    const emailContainer = Array.from(document.querySelectorAll('.info-label'))
+                        .find(el => el.textContent.includes('Email'));
+                    if (emailContainer) {
+                        const valueDiv = emailContainer.nextElementSibling;
+                        if (valueDiv) valueDiv.innerHTML = `<a href="mailto:${club.email}" class="text-decoration-none">${club.email}</a>`;
+                    }
+                }
+            }
+            
+            // Update phone
+            const phoneElem = document.querySelector('a[href^="tel:"]');
+            if (club.phone) {
+                if (phoneElem) {
+                    phoneElem.href = `tel:${club.phone}`;
+                    phoneElem.textContent = club.phone;
+                } else {
+                    const phoneContainer = Array.from(document.querySelectorAll('.info-label'))
+                        .find(el => el.textContent.includes('Phone'));
+                    if (phoneContainer) {
+                        const valueDiv = phoneContainer.nextElementSibling;
+                        if (valueDiv) valueDiv.innerHTML = `<a href="tel:${club.phone}" class="text-decoration-none">${club.phone}</a>`;
+                    }
+                }
+            }
+            
+            // Update all other text fields by finding their labels
+            const updateByLabel = (labelText, value) => {
+                const label = Array.from(document.querySelectorAll('.info-label'))
+                    .find(el => el.textContent.includes(labelText));
+                if (label) {
+                    const valueDiv = label.nextElementSibling;
+                    if (valueDiv) valueDiv.textContent = value || '—';
+                }
+            };
+            
+            updateByLabel('Address', club.address);
+            updateByLabel('Founded', club.foundedDate);
+            updateByLabel('Member Limit', club.memberLimit);
+            updateByLabel('Manager', club.managerEmail);
+            
+            console.log("All club details updated successfully");
         }
 
         connection.on("CreateClub", function (clubId)

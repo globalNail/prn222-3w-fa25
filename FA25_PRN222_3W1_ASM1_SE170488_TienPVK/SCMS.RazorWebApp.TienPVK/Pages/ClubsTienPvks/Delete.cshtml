@@ -252,7 +252,7 @@
 
     var connection = new signalR.HubConnectionBuilder()
         .withUrl("/clubHub")
-        .configureLogging(signalR.LogLevel.None)
+        .configureLogging(signalR.LogLevel.Information)
         .build();
 
     function showToast(message, isSuccess = true) {
@@ -293,8 +293,8 @@
     connection.on("DeleteClub", function (clubId)
     {
         console.log("Club deleted successfully, redirecting...");
-        showToast('Club deleted successfully!', true);
-        setTimeout(() => window.location.href = "/ClubsTienPvks/Index", 1500);
+        // This page initiated the delete, so redirect to Index after notifying others
+        setTimeout(() => window.location.href = "/ClubsTienPvks/Index", 2000);
     });
 
     connection.start()
@@ -307,11 +307,13 @@
     // Handle SignalR delete button
     document.getElementById("btnHubDelete").addEventListener("click", function (event)
     {
-        if (confirm('Are you sure you want to delete this club via SignalR?')) {
+        if (confirm('Are you sure you want to delete this club via SignalR? All users viewing this club will be notified.')) {
             var obj = document.getElementById("ClubsTienPvk_ClubIdtienPvk").value;
             connection.invoke("SendDeleteClub", obj)
                 .then(() => {
-                    console.log("Delete successful");
+                    console.log("Delete successful - all clients notified");
+                    showToast('Club deleted successfully! All detail pages have been notified.', true);
+                    // Don't redirect immediately - let user see the success message
                 })
                 .catch(err => {
                     console.error("Action fail:", err);

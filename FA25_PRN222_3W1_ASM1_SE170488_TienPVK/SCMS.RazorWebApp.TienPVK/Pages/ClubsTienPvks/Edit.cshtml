@@ -324,12 +324,20 @@
 
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/clubHub")
-            .configureLogging(signalR.LogLevel.None)
+            .configureLogging(signalR.LogLevel.Information)
             .build();
 
         connection.start()
-            .then(() => console.log("SignalR connected on Edit page"))
+            .then(() => {
+                console.log("SignalR connected on Edit page");
+                console.log("Connection ID:", connection.connectionId);
+            })
             .catch(err => console.error("SignalR connection error:", err));
+
+        // Listen for UpdateClub events to confirm broadcast is working
+        connection.on("UpdateClub", function (clubId) {
+            console.log("Edit page received UpdateClub broadcast for club ID:", clubId);
+        });
 
         function showToast(message, isSuccess = true) {
             if (isSuccess) {
@@ -368,18 +376,47 @@
 
         // SignalR update button
         document.getElementById('btnUpdateSignalR').addEventListener('click', function() {
-            var clubId = document.getElementById('ClubsTienPvk_ClubIdtienPvk').value;
-            
             if (confirm('Are you sure you want to update this club via SignalR?')) {
-                connection.invoke('SendUpdateClub', clubId)
+                // Collect all form data - only valid model properties
+                const clubData = {
+                    clubIdtienPvk: parseInt(document.getElementById('ClubsTienPvk_ClubIdtienPvk').value),
+                    clubCode: document.getElementById('ClubsTienPvk_ClubCode').value,
+                    clubName: document.getElementById('ClubsTienPvk_ClubName').value,
+                    description: document.getElementById('ClubsTienPvk_Description').value || null,
+                    categoryIdtienPvk: parseInt(document.getElementById('ClubsTienPvk_CategoryIdtienPvk').value),
+                    email: document.getElementById('ClubsTienPvk_Email').value || null,
+                    phone: document.getElementById('ClubsTienPvk_Phone').value || null,
+                    address: document.getElementById('ClubsTienPvk_Address').value || null,
+                    foundedDate: document.getElementById('ClubsTienPvk_FoundedDate').value,
+                    memberLimit: parseInt(document.getElementById('ClubsTienPvk_MemberLimit').value) || 0,
+                    isOpenToJoin: document.getElementById('ClubsTienPvk_IsOpenToJoin').checked,
+                    requiresApproval: document.getElementById('ClubsTienPvk_RequiresApproval').checked,
+                    status: document.getElementById('ClubsTienPvk_Status').value,
+                    createdAt: document.getElementById('ClubsTienPvk_CreatedAt').value,
+                    createdBy: document.getElementById('ClubsTienPvk_CreatedBy').value || null,
+                    isDeleted: document.getElementById('ClubsTienPvk_IsDeleted').value === 'true',
+                    managerUserId: parseInt(document.getElementById('ClubsTienPvk_ManagerUserId')?.value) || null
+                };
+
+                console.log('Sending update for club:', clubData.clubIdtienPvk, clubData);
+
+                connection.invoke('SendUpdateClub', clubData)
                     .then(() => {
-                        console.log('Update broadcast successful');
-                        showToast('Club updated successfully via SignalR!', true);
-                        setTimeout(() => window.location.href = '/ClubsTienPvks/Index', 1500);
+                        console.log('Update broadcast successful - message sent to all clients');
+                        showToast('✅ Club updated successfully! All detail pages have been notified.', true);
+                        
+                        // Show options after successful update
+                        setTimeout(() => {
+                            if (confirm('Update successful! Click OK to view club details, or Cancel to return to club list.')) {
+                                window.location.href = `/ClubsTienPvks/Details/${clubData.clubIdtienPvk}`;
+                            } else {
+                                window.location.href = '/ClubsTienPvks/Index';
+                            }
+                        }, 1500);
                     })
                     .catch(err => {
                         console.error('Update failed:', err);
-                        showToast('Failed to update: ' + err, false);
+                        showToast('❌ Failed to update: ' + err, false);
                     });
             }
         });
