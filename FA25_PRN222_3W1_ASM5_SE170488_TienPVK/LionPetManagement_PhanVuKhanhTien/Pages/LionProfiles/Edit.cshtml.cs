@@ -33,24 +33,32 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
                 return NotFound();
             }
             LionProfile = lionprofile;
-           ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
+            ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("LionProfile.ModifiedDate");
+            ModelState.Remove("LionProfile.LionType");
+
             if (!ModelState.IsValid)
             {
+                ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
                 return Page();
             }
 
+            LionProfile.ModifiedDate = DateTime.Now;
+
             var updated = await _service.UpdateAsync(LionProfile);
-            if (updated == null)
+            if (updated > 0)
             {
-                return NotFound();
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
+
+            ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
+            return Page();
         }
 
         private bool LionProfileExists(int id)

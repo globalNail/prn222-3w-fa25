@@ -34,7 +34,9 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Remove navigation properties from validation
             ModelState.Remove("LionProfile.ModifiedDate");
+            ModelState.Remove("LionProfile.LionType");
 
             if (!ModelState.IsValid)
             {

@@ -19,6 +19,8 @@ public class LionProfileService
 
     public async Task<int> UpdateAsync(LionProfile entity) => await _repository.UpdateAsync(entity);
 
+    public async Task<List<LionProfile>> Search(string name, double weight) => await _repository.Search(name, weight);
+
     public async Task<bool> DeleteAsync(int id)
     {
         try

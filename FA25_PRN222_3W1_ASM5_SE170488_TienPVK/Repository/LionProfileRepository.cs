@@ -33,4 +33,20 @@ public class LionProfileRepository : GenericRepository<LionProfile>
         }
         return false;
     }
+
+    public async Task<List<LionProfile>> Search(string name, double? weight)
+    {
+        var query = _context.LionProfiles.Include(a => a.LionType).AsQueryable();
+
+        // OR logic: filter by weight OR lionTypeName
+        if (!string.IsNullOrEmpty(name) || (weight.HasValue && weight.Value > 0))
+        {
+            query = query.Where(a => 
+                (!string.IsNullOrEmpty(name) && a.LionType.LionTypeName.Contains(name)) ||
+                (weight.HasValue && weight.Value > 0 && a.Weight == weight.Value)
+            );
+        }
+
+        return await query.OrderByDescending(a => a.ModifiedDate).ToListAsync();
+    }
 }

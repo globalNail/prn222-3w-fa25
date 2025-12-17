@@ -1,0 +1,74 @@
+﻿@page
+@model LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles.SearchModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Search</h1>
+
+<form method="get">
+    <div>
+        <label for="weight">Weight:</label>
+        <input type="number" name="weight" value="@Model.weight" step="0.01" />
+    </div>
+    <div>
+        <label for="lionTypeName">Lion Type Name:</label>
+        <input type="text" name="lionTypeName" value="@Model.lionTypeName" />
+    </div>
+    <button type="submit">Search</button>
+</form>
+
+<p>
+    <a asp-page="./Index">Back to List</a>
+</p>
+
+@if (Model.LionProfile != null && Model.LionProfile.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.LionProfile[0].LionName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LionProfile[0].Weight)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LionProfile[0].Characteristics)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LionProfile[0].Warning)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LionProfile[0].ModifiedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LionProfile[0].LionType)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LionProfile)
+            {
+                <tr>
+                    <td>@item.LionName</td>
+                    <td>@item.Weight</td>
+                    <td>@item.Characteristics</td>
+                    <td>@item.Warning</td>
+                    <td>@item.ModifiedDate</td>
+                    <td>@item.LionType.LionTypeName</td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.LionProfileId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.LionProfileId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.LionProfileId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results found.</p>
+}
