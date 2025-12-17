@@ -49,8 +49,12 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
             {
                 return NotFound();
             }
-
-            await _service.DeleteAsync(id.Value);
+            var obj = await _service.GetByIdAsync(id.Value);
+            if (obj != null)
+            {
+                LionProfile = obj;
+                await _service.DeleteAsync(id.Value);
+            }
 
             return RedirectToPage("./Index");
         }

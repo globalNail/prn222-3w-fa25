@@ -34,9 +34,17 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <!-- #region tableBody-->
+
+    <tbody id="idTableBody">
+
+    <!-- #endregion -->
 @foreach (var item in Model.LionProfile) {
-        <tr>
+        <!-- #region rowItem-->
+
+        <tr class="js-pagination-item" id="@item.LionProfileId">
+
+         <!-- #endregion -->
             <td>
                 @Html.DisplayFor(modelItem => item.LionName)
             </td>
@@ -65,28 +73,53 @@
     </tbody>
 </table>
 
+<nav aria-label="Lion profiles pagination" class="mt-4">
+    <ul class="pagination justify-content-center js-pagination">
+        <li class="page-item disabled prev">
+            <button class="page-link" tabindex="-1" aria-disabled="true">
+                <span aria-hidden="true">&laquo;</span> Previous
+            </button>
+        </li>
+        <li class="page-item active number" data-pagination="1">
+            <button class="page-link">1</button>
+        </li>
+        <li class="page-item number-first" style="display: none;">
+            <span class="page-link">...</span>
+        </li>
+        <li class="page-item number" data-pagination="2">
+            <button class="page-link">2</button>
+        </li>
+        <li class="page-item number-last">
+            <span class="page-link">...</span>
+        </li>
+        <li class="page-item number" data-pagination="10">
+            <button class="page-link">10</button>
+        </li>
+        <li class="page-item next">
+            <button class="page-link">Next <span aria-hidden="true">&raquo;</span></button>
+        </li>
+    </ul>
+</nav>
 
-
-<div id="pagination" class="mt-3"></div>
-@section Scripts {
-    <script src="~/js/pagination.js"></script>
-}
-
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/pagination.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script>
+    // Paging
+    $(document).ready(function() {
+        generatePagination('.js-pagination', '.js-pagination-item', 3, 'Prev', 'Next');
+    });
+    // SignalR
     "use strict";
 
-    const connection = new signalR
-        .HubConnectionBuilder()
-        .withUrl("/LionHub").build();
+    const connection = new signalR.HubConnectionBuilder().withUrl("/LionHub").build();
 
-    connection.start().then(() => {
-        console.log("TuTTC: Connected to the SignalR Hub");
-    }).catch(err => console.error(err.toString()));
+    connection.start()
+        .then(() => { console.log("Connected to the SignalR Hub");})
+        .catch(err => console.error(err.toString()));
 
 
     connection.on("Receiver_Delete", function (LionProfileId) {
-        $('#lionTableBody').find(`tr[id='${LionProfileId}']`).remove();
+        $('#idTableBody').find(`tr[id='${LionProfileId}']`).fadeOut('slow', function() { $(this).remove(); });
     });
-
 </script>

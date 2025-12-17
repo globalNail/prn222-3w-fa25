@@ -13,20 +13,13 @@ namespace LionPetManagement_PhanVuKhanhTien.Hubs
             _service = service;
         }
 
-        // Delete LION
         public async Task HubDelete(string objId)
         {
-            if (!int.TryParse(objId, out int id))
-            {
-                await Clients.Caller.SendAsync("Receiver_DeleteFailed", new List<string> { "Invalid ID." });
-                return;
-            }
+            var result = await _service.DeleteAsync(Int32.Parse(objId));
 
-            bool isDeleted = await _service.DeleteAsync(id);
-
-            if (isDeleted)
+            if (result)
             {
-                // Delete from database first
+                // Broadcast to all connected clients after successful deletion
                 await Clients.All.SendAsync("Receiver_Delete", objId);
             }
             else
@@ -34,16 +27,6 @@ namespace LionPetManagement_PhanVuKhanhTien.Hubs
                 // Then notify all clients
                 await Clients.Caller.SendAsync("Receiver_DeleteFailed", new List<string> { "Delete operation failed." });
             }
-        }
-
-        private bool TryValidate(object model, out List<string> errors)
-        {
-            var context = new ValidationContext(model);
-            var results = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(model, context, results, true);
-
-            errors = results.Select(e => e.ErrorMessage).ToList();
-            return isValid;
         }
     }
 }

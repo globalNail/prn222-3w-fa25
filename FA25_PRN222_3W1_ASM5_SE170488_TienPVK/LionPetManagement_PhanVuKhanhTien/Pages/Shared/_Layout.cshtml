@@ -22,13 +22,32 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
+                        <!-- #region navigate -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/LionProfiles/Index">Lion Profiles</a>
                         </li>
+                        <!-- #endregion -->
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <!-- #region user-context -->
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <span class="nav-link text-dark">
+                                    Welcome, <strong>@(User.FindFirst("FullName")?.Value ?? User.Identity.Name)</strong>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Logout</a>
+                            </li>
+                        </ul>
+                    }
+
+                    <!-- #endregion -->
                 </div>
             </div>
         </nav>

@@ -37,16 +37,13 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.Account
                 {
                     new Claim(ClaimTypes.Name, userAccount.UserName),
                     new Claim(ClaimTypes.Role, userAccount.RoleId.ToString()),
-                    new Claim("FullName", userAccount.FullName),
-                    new Claim("AccountId", userAccount.AccountId.ToString())
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
-                //// After signing then redirect to default page
+                //// After signing then redirect to Index
                 return RedirectToPage("/LionProfiles/Index");
-                //return RedirectToPage("/Index");
             }
             else
             {
