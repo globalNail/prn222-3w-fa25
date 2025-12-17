@@ -25,8 +25,8 @@ builder.Services.AddScoped<LionTypeService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Forbidden";
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/Forbidden";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     });
 
