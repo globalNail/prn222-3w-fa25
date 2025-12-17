@@ -48,7 +48,7 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.Account
             else
             {
                 //ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                TempData["Message"] = "Login fail, please check your account";
+                TempData["Message"] = "Invalid Email or Password!";
             }
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
