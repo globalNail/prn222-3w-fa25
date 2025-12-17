@@ -18,7 +18,7 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
 
         public IndexModel(LionProfileService service) => _service = service;
 
-        public IList<LionProfile> LionProfile { get;set; } = default!;
+        public IList<Entity.Models.LionProfile> LionProfile { get;set; } = default!;
 
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;

@@ -21,7 +21,7 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
             _subService = subService;
         }
 
-        public LionProfile LionProfile { get; set; } = default!;
+        public Entity.Models.LionProfile LionProfile { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

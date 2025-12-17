@@ -24,7 +24,7 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
 
         public async Task<IActionResult> OnGet()
         {
-        ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
+            ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
             return Page();
         }
 
@@ -34,15 +34,24 @@ namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("LionProfile.ModifiedDate");
+
             if (!ModelState.IsValid)
             {
                 ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
                 return Page();
             }
 
-            await _service.CreateAsync(LionProfile);
+            LionProfile.ModifiedDate = DateTime.Now;
 
-            return RedirectToPage("./Index");
+            var result = await _service.CreateAsync(LionProfile);
+            if (result > 0)
+            {
+                return RedirectToPage("./Index");
+            }
+
+            ViewData["LionTypeId"] = new SelectList(await _subService.GetAllAsync(), "LionTypeId", "LionTypeName");
+            return Page();
         }
     }
 }
