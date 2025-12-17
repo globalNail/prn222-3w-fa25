@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Entity.Models;
 using Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
 {
+    [Authorize(Roles = "2")]
     public class EditModel : PageModel
     {
         private readonly LionProfileService _service;

@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Entity.Models;
 using Repository.DBContext;
 using Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
 {
+    [Authorize(Roles = "2")]
     public class DeleteModel : PageModel
     {
         private readonly LionProfileService _service;

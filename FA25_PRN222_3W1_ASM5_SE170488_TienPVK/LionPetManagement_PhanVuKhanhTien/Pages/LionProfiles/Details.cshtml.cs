@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Entity.Models;
 using Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LionPetManagement_PhanVuKhanhTien.Pages.LionProfiles
 {
+    [Authorize(Roles = "2,3")]
     public class DetailsModel : PageModel
     {
         private readonly LionProfileService _service;
