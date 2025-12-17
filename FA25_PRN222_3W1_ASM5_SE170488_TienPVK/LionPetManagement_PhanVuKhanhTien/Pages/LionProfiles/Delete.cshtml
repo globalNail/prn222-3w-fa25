@@ -52,7 +52,40 @@
     
     <form method="post">
         <input type="hidden" asp-for="LionProfile.LionProfileId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="btnHubDelete" class="btn btn-danger" /> |
         <a asp-page="./Index">Back to List</a>
     </form>
 </div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/LionHub").build();
+
+    connection.start().then(function () {
+        console.log("Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("btnHubDelete").addEventListener("click", function (event) {
+        console.log("Button clicked");
+        const id = parseInt(document.getElementById("LionProfile_LionProfileId").value);
+        if (isNaN(id)) {
+            alert("Invalid lion ID.");
+            return;
+        }
+        console.log("Sending delete request for ID:", id);
+        connection.invoke("HubDelete", id.toString())
+            .then(function () {
+                // After successful deletion, redirect to home page
+                window.location.href = '/LionProfile/Index';
+            })
+            .catch(function (err) {
+                console.error("Error invoking hub method:", err.toString());
+            });
+
+        event.preventDefault();
+    });
+</script>

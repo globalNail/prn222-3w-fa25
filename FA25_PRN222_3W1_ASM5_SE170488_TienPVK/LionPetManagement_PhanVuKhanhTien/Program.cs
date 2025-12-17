@@ -1,7 +1,35 @@
+using LionPetManagement_PhanVuKhanhTien.Hubs;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+//  ===========
+//||  SignalR  ||
+//  ===========
+builder.Services.AddSignalR();
+
+//  ================
+//||  Core Service  ||
+//  ================
+builder.Services.AddScoped<LionAccountService>();
+builder.Services.AddScoped<LionProfileService>();
+builder.Services.AddScoped<LionTypeService>();
+
+//  ==================================
+//||  Authentication & Authorization  ||
+//  ==================================
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/Forbidden";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    });
+
 
 var app = builder.Build();
 
@@ -18,8 +46,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
-
+app.MapRazorPages().RequireAuthorization();
+app.MapHub<LionHub>("/LionHub");
 app.Run();

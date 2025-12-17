@@ -53,7 +53,7 @@
                 @Html.DisplayFor(modelItem => item.ModifiedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LionType.LionTypeId)
+                @Html.DisplayFor(modelItem => item.LionType.LionTypeName)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.LionProfileId">Edit</a> |
@@ -64,3 +64,29 @@
 }
     </tbody>
 </table>
+
+
+
+<div id="pagination" class="mt-3"></div>
+@section Scripts {
+    <script src="~/js/pagination.js"></script>
+}
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    const connection = new signalR
+        .HubConnectionBuilder()
+        .withUrl("/LionHub").build();
+
+    connection.start().then(() => {
+        console.log("TuTTC: Connected to the SignalR Hub");
+    }).catch(err => console.error(err.toString()));
+
+
+    connection.on("Receiver_Delete", function (LionProfileId) {
+        $('#lionTableBody').find(`tr[id='${LionProfileId}']`).remove();
+    });
+
+</script>
